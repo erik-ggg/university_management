@@ -12,7 +12,7 @@ interface SubjectDao {
     fun getAll(): List<Subject>
 
     @Insert
-    fun insert(subject: Subject)
+    fun insert(subject: Subject): Long
 
     @Insert
     fun insertAll(vararg subjects: Subject)

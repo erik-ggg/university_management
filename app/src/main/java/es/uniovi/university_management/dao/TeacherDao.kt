@@ -12,7 +12,7 @@ interface TeacherDao {
     fun getAll(): List<Teacher>
 
     @Insert
-    fun insert(teacher: Teacher): Int
+    fun insert(teacher: Teacher): Long
 
     @Insert
     fun insertAll(vararg teachers: Teacher)

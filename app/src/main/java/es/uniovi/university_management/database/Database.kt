@@ -10,14 +10,16 @@ import es.uniovi.university_management.dao.TeacherSubjectDao
 import es.uniovi.university_management.dao.YearDao
 import es.uniovi.university_management.model.Subject
 import es.uniovi.university_management.model.Teacher
+import es.uniovi.university_management.model.TeacherSubject
 import es.uniovi.university_management.model.Year
 
-@Database(entities = arrayOf(Year::class, Subject::class, Teacher::class, TeacherSubjectDao::class), version = 1)
+@Database(entities = arrayOf(Year::class, Subject::class, Teacher::class, TeacherSubject::class), exportSchema = false, version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun yearDao(): YearDao
     abstract fun subjectDao(): SubjectDao
     abstract fun teacherDao(): TeacherDao
+    abstract fun teacherSubjectDao(): TeacherSubjectDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null;

@@ -7,11 +7,16 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class Subject(
-    val name: String,
-    @Ignore
-    val teachers: MutableList<Teacher>
+    val name: String
 ) {
+    constructor(name: String, teacher: MutableList<Teacher>) : this(name)
+
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null
-    var yearId: Int? = null
+    var id: Int? = null
+    set(id) {
+        field = id
+    }
+    @Ignore
+    val teachers: MutableList<Teacher> = ArrayList()
+    var yearId: Long? = null
 }

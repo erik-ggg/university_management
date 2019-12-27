@@ -9,5 +9,8 @@ data class TeacherSubject(
     var subjectId: Int
 ) {
     @PrimaryKey(autoGenerate = true)
-    val id: Int? = null
+    var id: Int? = null
+    set(id) {
+        field = id
+    }
 }

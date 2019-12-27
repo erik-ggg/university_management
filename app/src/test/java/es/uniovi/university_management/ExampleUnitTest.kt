@@ -2,11 +2,15 @@ package es.uniovi.university_management
 
 import android.content.Context
 import android.os.Build
+import android.util.Log
 import es.uniovi.university_management.database.AppDatabase
 import es.uniovi.university_management.model.Subject
 import es.uniovi.university_management.model.Teacher
+import es.uniovi.university_management.model.TeacherSubject
 import es.uniovi.university_management.model.Year
 import es.uniovi.university_management.xmlParser.MailReader
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.junit.Test
 
 import org.junit.Assert.*
@@ -63,24 +67,36 @@ class ExampleUnitTest {
 
         // TODO: creo profesores y guardo sus id, luego, creo la asignatura, con la asignatura creada creo la relacion entre ambos usando el id de la asignatura y la lista de los profesores
         var teacherIds = mutableListOf<Int>()
-        var yearId = -1
+        var subjectId: Long = -1
+        var yearId: Long = -1
 
-        xmlData.forEach() {
-            yearId = db?.yearDao()?.insert(it)!!
-            it.subjects.forEach() {
-                it.teachers.forEach() {
-                    teacherIds.add(db?.teacherDao()?.insert(it)!!)
-                }
-                it.yearId = yearId
-                db?.subjectDao()?.insert(it)
-                teacherIds.forEach() {
+        var years = mutableListOf<Year>()
+        var subjects = mutableListOf<Subject>()
+        var teachers = mutableListOf<Teacher>()
 
+        GlobalScope.launch {
+            xmlData.forEach() {
+                yearId = db?.yearDao()?.insert(it)!!
+                it.subjects?.forEach() {
+                    it.teachers?.forEach() {
+                        teacherIds.add(db?.teacherDao()?.insert(it).toInt())
+                    }
+                    println(teacherIds.toString())
+                    it.yearId = yearId
+                    subjectId = db?.subjectDao()?.insert(it)
+                    teacherIds.forEach() {
+                        db?.teacherSubjectDao()?.insert(TeacherSubject(it, subjectId.toInt()))
+                    }
                 }
             }
-            db?.yearDao()?.insert(it)
+
+            years = db?.yearDao()?.getAll() as MutableList<Year>
+            subjects = db?.subjectDao()?.getAll() as MutableList<Subject>
+            teachers = db?.teacherDao()?.getAll() as MutableList<Teacher>
         }
-        assertTrue(db?.yearDao()?.getAll()?.size!! > 0)
-        assertTrue(db?.subjectDao()?.getAll()?.size!! > 0)
-        assertTrue(db?.teacherDao()?.getAll()?.size!! > 0)
+
+            assertTrue(years.size > 0)
+            assertTrue(subjects.size > 0)
+            assertTrue(teachers.size > 0)
     }
 }

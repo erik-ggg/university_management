@@ -42,9 +42,9 @@ class MailReader {
                         name = parser.name
                         Log.d("XML", name)
                         if (name == "subject")
-                            year!!.subjects.add(subject!!)
+                            subject?.let { year?.subjects?.add(it) }
                         else if (name == "year") {
-                            years.add(year!!)
+                            year?.let { years.add(it) }
                         }
                     }
                 }
@@ -77,10 +77,10 @@ class MailReader {
             teacher1 = Teacher("", "")
         } else {
             if (name == "name")
-                teacher1!!.name = parser.nextText()
+                teacher1?.name = parser.nextText()
             if (name == "email") {
-                teacher1!!.email = parser.nextText()
-                subject1!!.teachers.add(teacher1)
+                teacher1?.email = parser.nextText()
+                teacher1?.let { subject1?.teachers?.add(it) }
             }
         }
         return Triple(subject1, teacher1, year1)

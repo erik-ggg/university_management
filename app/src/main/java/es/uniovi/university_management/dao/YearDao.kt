@@ -12,7 +12,7 @@ interface YearDao {
     fun getAll(): List<Year>
 
     @Insert
-    fun insert(year: Year): Int
+    fun insert(year: Year): Long
 
     @Insert
     fun insertAll(vararg years: Year)
