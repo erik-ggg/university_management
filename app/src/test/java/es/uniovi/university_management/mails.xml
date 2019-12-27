@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<university name="Universidad de Oviedo">
+    <year number="1">
+        <subject name="Introducción a la Programación">
+            <teacher>
+                <name>Profesor1</name>
+                <email>Profesor1@mail.com</email>
+            </teacher>
+            <teacher>
+                <name>Profesor2</name>
+                <email>Profesor2@mail.com</email>
+            </teacher>
+        </subject>
+        <subject name="Metodología de la Programación">
+        </subject>
+    </year>
+    <year number="2">
+    </year>
+    <year number="3">
+    </year>
+    <year number="4">
+    </year>
+</university>
