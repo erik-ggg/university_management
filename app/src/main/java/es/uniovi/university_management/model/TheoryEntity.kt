@@ -4,13 +4,11 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class Teacher(
-    var name: String,
-    var email: String
-) {
+data class TheoryEntity(var sectionId: Long?) {
+    constructor(): this(null)
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
-    set(id) {
-        field = id
-    }
+        set(id) {
+            field = id
+        }
 }

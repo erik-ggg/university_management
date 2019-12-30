@@ -4,19 +4,19 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import es.uniovi.university_management.model.Teacher
+import es.uniovi.university_management.model.TeacherEntity
 
 @Dao
 interface TeacherDao {
-    @Query("SELECT * FROM teacher")
-    fun getAll(): List<Teacher>
+    @Query("SELECT * FROM teacherentity")
+    fun getAll(): List<TeacherEntity>
 
     @Insert
-    fun insert(teacher: Teacher): Long
+    fun insert(teacher: TeacherEntity): Long
 
     @Insert
-    fun insertAll(vararg teachers: Teacher)
+    fun insertAll(vararg teachers: TeacherEntity)
 
     @Delete
-    fun delete(teacher: Teacher)
+    fun delete(teacher: TeacherEntity)
 }

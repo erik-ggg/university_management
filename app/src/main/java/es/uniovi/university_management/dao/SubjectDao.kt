@@ -4,19 +4,19 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import es.uniovi.university_management.model.Subject
+import es.uniovi.university_management.model.SubjectEntity
 
 @Dao
 interface SubjectDao {
-    @Query("SELECT * FROM subject")
-    fun getAll(): List<Subject>
+    @Query("SELECT * FROM subjectentity")
+    fun getAll(): List<SubjectEntity>
 
     @Insert
-    fun insert(subject: Subject): Long
+    fun insert(subject: SubjectEntity): Long
 
     @Insert
-    fun insertAll(vararg subjects: Subject)
+    fun insertAll(vararg subjects: SubjectEntity)
 
     @Delete
-    fun delete(subject: Subject)
+    fun delete(subject: SubjectEntity)
 }

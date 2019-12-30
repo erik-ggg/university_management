@@ -4,19 +4,19 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
-import es.uniovi.university_management.model.Year
+import es.uniovi.university_management.model.YearEntity
 
 @Dao
 interface YearDao {
-    @Query("SELECT * FROM year")
-    fun getAll(): List<Year>
+    @Query("SELECT * FROM yearentity")
+    fun getAll(): List<YearEntity>
 
     @Insert
-    fun insert(year: Year): Long
+    fun insert(year: YearEntity): Long
 
     @Insert
-    fun insertAll(vararg years: Year)
+    fun insertAll(vararg years: YearEntity)
 
     @Delete
-    fun delete(year: Year)
+    fun delete(year: YearEntity)
 }
