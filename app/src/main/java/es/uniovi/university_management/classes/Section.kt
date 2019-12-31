@@ -1,4 +1,4 @@
-package es.uniovi.university_management.model
+package es.uniovi.university_management.classes
 
 data class Section(val weighing: Double) {
     var mean: Double = 0.0

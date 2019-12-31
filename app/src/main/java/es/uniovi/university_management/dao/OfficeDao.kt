@@ -12,7 +12,7 @@ interface OfficeDao {
     fun getAll(): List<OfficeEntity>
 
     @Insert
-    fun insert(office: OfficeDao): Long
+    fun insert(office: OfficeEntity): Long
 
     @Insert
     fun insertAll(vararg offices: OfficeEntity)

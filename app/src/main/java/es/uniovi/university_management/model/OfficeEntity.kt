@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class OfficeEntity(val buiding: String, val floor: Int, val door: String) {
+data class OfficeEntity(val buiding: String, val floor: Int, val door: String, val coordinates: String) {
     @PrimaryKey
     var id: Int? = null
     set(id) {

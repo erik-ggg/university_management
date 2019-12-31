@@ -1,4 +1,4 @@
-package es.uniovi.university_management.model
+package es.uniovi.university_management.classes
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

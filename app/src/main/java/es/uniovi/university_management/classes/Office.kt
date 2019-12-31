@@ -1,3 +1,3 @@
-package es.uniovi.university_management.model
+package es.uniovi.university_management.classes
 
-data class Office (val floor: Int, val door: String)
+data class Office(var building: String?, var floor: Int?, var door: String?, var coordinates: String?)

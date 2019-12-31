@@ -2,7 +2,7 @@ package es.uniovi.university_management
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import es.uniovi.university_management.xmlParser.MailReader
+import es.uniovi.university_management.xmlParser.XmlReader
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,7 +10,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val reader = MailReader()
+        val reader = XmlReader()
         reader.readAndParse(applicationContext)
     }
 }
