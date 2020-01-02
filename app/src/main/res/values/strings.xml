@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">university_management</string>
+    <string name="title_activity_subjects">Subjects</string>
+    <string name="delete_item">Papelera</string>
+
+    <!--menú Asignaturas-->
+    <string name="action_anadir">Añadir Asignaturas</string>
+    <string name="action_settings">Ajustes</string>
+
 </resources>
