@@ -1,16 +1,11 @@
 package es.uniovi.university_management.ui;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +22,7 @@ public class Subjects extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_subjects);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -40,16 +35,28 @@ public class Subjects extends AppCompatActivity {
         subjects.add(new Subject("CPM", teachers));
         subjects.add(new Subject("Álgebra", teachers));
         //fin hardcoding
-        RecyclerView listaAsignaturasView = findViewById(R.id.lista_asignaturas);
+        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         listaAsignaturasView.setLayoutManager(mLayoutManager);
-        listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
-        listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
+        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        listaAsignaturasView.setItemViewCacheSize(subjects.size());
 
-        SubjectsAdapter mAdapter = new SubjectsAdapter(subjects);
+        SubjectsAdapter mAdapter = new SubjectsAdapter(subjects, getApplicationContext());
         listaAsignaturasView.setAdapter(mAdapter);
+        /*CardView card_view = (CardView) findViewById(R.id.card_view);
 
-        final TextView itemSelected = findViewById(R.id.nombre_asignatura);
+        card_view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(getApplicationContext(), Subjects.class);
+                //i.putExtra("nombreAsignatura", itemSelected.getText().toString());
+                startActivity(i);
+
+            }
+        });
+
+        /*final TextView itemSelected = findViewById(R.id.nombre_asignatura);
         itemSelected.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -59,7 +66,7 @@ public class Subjects extends AppCompatActivity {
                 startActivity(i);
 
             }
-        });
+        });*/
 
 
     }
