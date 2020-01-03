@@ -15,6 +15,7 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Subject;
+import es.uniovi.university_management.ui.SubjectActivity;
 
 public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyViewHolder> {
 
@@ -66,7 +67,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent i = new Intent(context, Subject.class);
+                    Intent i = new Intent(context, SubjectActivity.class);
                     i.putExtra("nombreAsignatura", titulo.getText().toString());
                     context.startActivity(i);
                 }

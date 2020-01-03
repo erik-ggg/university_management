@@ -6,8 +6,12 @@
     <!--menú Asignaturas-->
     <string name="action_anadir">Añadir Asignaturas</string>
     <string name="action_settings">Ajustes</string>
-    <string name="title_activity_subject">Subject</string>
-    <string name="tab_text_1">Tab 1</string>
-    <string name="tab_text_2">Tab 2</string>
+    <string name="title_activity_subject">SubjectActivity</string>
+
+
+    <!--menú Asignatura-->
+    <string name="tab_text_1">Teoría</string>
+    <string name="tab_text_2">Prácticas</string>
+    <string name="tab_text_3">Seminario</string>
 
 </resources>

@@ -13,7 +13,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".ui.Subject"
+            android:name=".ui.SubjectActivity"
             android:label="@string/title_activity_subject"
             android:theme="@style/AppTheme.NoActionBar"></activity>
 
