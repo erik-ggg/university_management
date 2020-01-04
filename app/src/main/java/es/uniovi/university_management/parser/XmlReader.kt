@@ -1,4 +1,4 @@
-package es.uniovi.university_management.xmlParser
+package es.uniovi.university_management.parser
 
 import android.content.Context
 import android.content.res.XmlResourceParser

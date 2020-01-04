@@ -1,16 +1,16 @@
 package es.uniovi.university_management
 
 import android.content.Context
-import android.location.Location
 import android.os.Build
 import android.util.Log
-import com.google.android.gms.maps.GoogleMap
+import androidx.test.core.app.ApplicationProvider
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.SphericalUtil
 import es.uniovi.university_management.classes.*
 import es.uniovi.university_management.database.AppDatabase
 import es.uniovi.university_management.model.*
-import es.uniovi.university_management.xmlParser.XmlReader
+import es.uniovi.university_management.parser.CSVReader
+import es.uniovi.university_management.parser.XmlReader
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.junit.After
@@ -38,7 +38,8 @@ class ExampleUnitTest {
 
     @Before
     fun setUp() {
-        context = RuntimeEnvironment.application
+//        context = RuntimeEnvironment.application
+        context = ApplicationProvider.getApplicationContext()
         db = AppDatabase.getAppDatabase(context)!!
         // TODO: wipe db first
     }
@@ -197,6 +198,13 @@ class ExampleUnitTest {
             // TODO: que pasa de normal
             // TODO: Si no esta que pasa...
         }
+    }
+
+    @Test
+    fun loadCSV() {
+        val reader = CSVReader()
+        val data = reader.readCSV(context)
+        assertTrue(data.size > 0)
     }
 
     /**

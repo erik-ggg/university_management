@@ -2,7 +2,8 @@ package es.uniovi.university_management
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import es.uniovi.university_management.xmlParser.XmlReader
+import es.uniovi.university_management.parser.CSVReader
+import es.uniovi.university_management.parser.XmlReader
 
 class MainActivity : AppCompatActivity() {
 
@@ -10,7 +11,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val reader = XmlReader()
-        reader.readAndParse(applicationContext)
+        val reader = CSVReader()
+        val data = reader.readCSV(applicationContext)
+        print(data.toString())
     }
 }
