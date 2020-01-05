@@ -4,10 +4,10 @@ abstract class SubjectSection(numberOfLessons: Int)
 {
     val assistancePercent = 0.8
     val maxAbscense = numberOfLessons - numberOfLessons * assistancePercent
-    var numberOfAbsence: Int = 0
+    var absences = mutableListOf<Absence>()
 
     fun isInContinua(): Boolean {
-        if (numberOfAbsence > maxAbscense)
+        if (absences.size > maxAbscense)
             return false
         return true
     }

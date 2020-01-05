@@ -17,7 +17,7 @@ class CSVReader() {
     private val SDM = "SDM"
 
     fun readCSV(context: Context): MutableList<TimeSubject> {
-        val inputStream: InputStream = context.assets.open("plan.csv")
+        val inputStream: InputStream = context.assets.open("mails.xml")
 //        val fileReader = BufferedReader(FileReader(File("E:\\University\\4\\SDM\\university_management\\app\\src\\test\\java\\es\\uniovi\\university_management\\plan.csv")))
         val fileReader = BufferedReader(InputStreamReader(inputStream))
 //        val fileReader = BufferedReader(context.assets.open("plan.csv").bufferedReader())

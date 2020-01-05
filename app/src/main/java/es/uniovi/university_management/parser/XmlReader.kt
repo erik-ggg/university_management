@@ -11,9 +11,8 @@ import java.io.InputStream
 
 class XmlReader {
 
-    var years = mutableListOf<Year>()
-
     fun readAndParse(context: Context): MutableList<Year> {
+        var years = mutableListOf<Year>()
         val parserFactory: XmlPullParserFactory = XmlPullParserFactory.newInstance()
         val parser: XmlPullParser = parserFactory.newPullParser()
         val inputStream: InputStream = context.assets.open("mails.xml")

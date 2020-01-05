@@ -11,11 +11,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.classes.Year;
+import es.uniovi.university_management.parser.CSVReader;
+import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
 
 public class Subjects extends AppCompatActivity {
@@ -27,15 +32,15 @@ public class Subjects extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_subjects);
         setSupportActionBar(toolbar);
 
-
+        // TODO: esto deberia ser: el usuario selecciona un xml con los datos a cargar o boton de carga automatica
+        CSVReader reader = new CSVReader();
+        XmlReader xmlReader = new XmlReader();
+        List<Year> data = xmlReader.readAndParse(getApplicationContext());
         ArrayList<Subject> subjects = new ArrayList<Subject>();
-        //harcodeando las asignaturas
-        ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-        teachers.add(new Teacher("Pepe", "pepe@uniovi.es", new Office("a", 2, "b", "c")));
-        subjects.add(new Subject("Diseño del Software", teachers));
-        subjects.add(new Subject("CPM", teachers));
-        subjects.add(new Subject("Álgebra", teachers));
-        //fin hardcoding
+        // Cargamos las asignaturas
+        for (Year year : data) {
+            subjects.addAll(year.getSubjects());
+        }
         RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         listaAsignaturasView.setLayoutManager(mLayoutManager);
