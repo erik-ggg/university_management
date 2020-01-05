@@ -87,7 +87,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
     private void confirmaBorrado(int pos) {
         AlertDialog.Builder builder = new AlertDialog.Builder(subjects);
 
-        builder.setTitle("Eliminar profesor")
+        builder.setTitle("Eliminar Asignatura")
                 .setMessage("La asignatura se eliminará definitivamente, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
