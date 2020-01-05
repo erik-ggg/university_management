@@ -1,5 +1,6 @@
 package es.uniovi.university_management.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,7 +24,7 @@ public class Subjects extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subjects);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_subjects);
         setSupportActionBar(toolbar);
 
 
@@ -91,6 +92,11 @@ public class Subjects extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void goToSettings(MenuItem item) {
+        Intent i = new Intent(this, SettingsActivity.class);
+        startActivity(i);
     }
 
 

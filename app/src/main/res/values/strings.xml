@@ -7,11 +7,25 @@
     <string name="action_anadir">Añadir Asignaturas</string>
     <string name="action_settings">Ajustes</string>
     <string name="title_activity_subject">SubjectActivity</string>
+    <string name="buscar">Buscar</string>
 
 
     <!--menú Asignatura-->
     <string name="tab_text_1">Teoría</string>
     <string name="tab_text_2">Prácticas</string>
     <string name="tab_text_3">Seminario</string>
+    <string name="title_activity_settings">Ajustes</string>
+
+
+    <!-- Preferences -->
+    <string name="settings_header">Ajustes Generales</string>
+    <string name="gestion_asistencia_summary">Activar Gestión automática de asistencia (requiere GPS activado)</string>
+    <string name="notificaciones_summary">Activar notificaciones antes de cada clase</string>
+    <string name="gestion_asistencia_title">Gestión de Asistencia</string>
+    <string name="notificaciones_title">Notificaciones</string>
+    <string name="antelacion">Antelación (minutos)</string>
+    <string name="title_activity_teachers">TeachersActivity</string>
+    <string name="anadir_profesor">Añadir Profesor</string>
+
 
 </resources>
