@@ -1,5 +1,6 @@
 package es.uniovi.university_management.ui.adapters;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -16,15 +17,18 @@ import java.util.List;
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.ui.SubjectActivity;
+import es.uniovi.university_management.ui.Subjects;
 
 public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyViewHolder> {
 
     private List<Subject> listaAsignaturas;
     private Context context;
+    private Subjects subjects;
 
-    public SubjectsAdapter(List<Subject> listaAsignaturas, Context context) {
+    public SubjectsAdapter(List<Subject> listaAsignaturas, Context context, Subjects subjects) {
         this.listaAsignaturas = listaAsignaturas;
         this.context = context;
+        this.subjects = subjects;
     }
 
 
@@ -43,8 +47,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
         holder.titulo.setText(asignatura.getName());
         holder.eliminar.setOnClickListener(view -> {
 
-            listaAsignaturas.remove(position);
-            SubjectsAdapter.this.notifyItemRemoved(position);
+            confirmaBorrado(position);
 
         });
 
@@ -78,10 +81,27 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
         }
 
 
-
         }
 
+
+    private void confirmaBorrado(int pos) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(subjects);
+
+        builder.setTitle("Eliminar profesor")
+                .setMessage("La asignatura se eliminará definitivamente, ¿está seguro?")
+                .setPositiveButton("OK",
+                        (dialog, which) -> {
+
+                            listaAsignaturas.remove(pos);
+                            SubjectsAdapter.this.notifyItemRemoved(pos);
+                        })
+                .setNegativeButton("CANCELAR",
+                        (dialog, which) -> dialog.cancel())
+                .show();
     }
+
+
+}
 
 
 
