@@ -4,20 +4,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager.widget.ViewPager;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.ui.ui.main.SectionsPagerAdapter;
 
 public class SubjectActivity extends AppCompatActivity {
+
+    private String subjectName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,18 +31,8 @@ public class SubjectActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         Bundle param = this.getIntent().getExtras();
-        String subjectName = param.getString("nombreAsignatura");
+        subjectName = param.getString("nombreAsignatura");
         getSupportActionBar().setTitle(subjectName);
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
@@ -64,11 +53,20 @@ public class SubjectActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.contact_teachers) {
-            Intent i = new Intent(this, TeachersActivity.class);
-            startActivity(i);
-            return true;
+            return createIntent(TeachersActivity.class);
+        }
+
+        if (id == R.id.absence_control) {
+            return createIntent(AbsencesActivity.class);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean createIntent(Class c) {
+        Intent i = new Intent(this, c);
+        i.putExtra("nombreAsignatura", subjectName);
+        startActivity(i);
+        return true;
     }
 }

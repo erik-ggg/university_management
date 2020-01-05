@@ -1,12 +1,12 @@
 <resources>
     <string name="app_name">university_management</string>
-    <string name="title_activity_subjects">Subjects</string>
+
     <string name="delete_item">Papelera</string>
 
     <!--menú Asignaturas-->
     <string name="action_anadir">Añadir Asignaturas</string>
     <string name="action_settings">Ajustes</string>
-    <string name="title_activity_subject">SubjectActivity</string>
+
     <string name="buscar">Buscar</string>
 
 
@@ -14,7 +14,6 @@
     <string name="tab_text_1">Teoría</string>
     <string name="tab_text_2">Prácticas</string>
     <string name="tab_text_3">Seminario</string>
-    <string name="title_activity_settings">Ajustes</string>
 
 
     <!-- Preferences -->
@@ -28,5 +27,10 @@
     <string name="anadir_profesor">Añadir Profesor</string>
     <string name="editar">editar</string>
 
+    <!-- Activity titles -->
+    <string name="title_activity_absences">Asistencias</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="title_activity_subject">SubjectActivity</string>
+    <string name="title_activity_subjects">Subjects</string>
 
 </resources>

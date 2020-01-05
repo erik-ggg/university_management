@@ -43,7 +43,7 @@ public class Subjects extends AppCompatActivity {
         //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         listaAsignaturasView.setItemViewCacheSize(subjects.size());
 
-        SubjectsAdapter mAdapter = new SubjectsAdapter(subjects, getApplicationContext());
+        SubjectsAdapter mAdapter = new SubjectsAdapter(subjects, getApplicationContext(), Subjects.this);
         listaAsignaturasView.setAdapter(mAdapter);
         /*CardView card_view = (CardView) findViewById(R.id.card_view);
 

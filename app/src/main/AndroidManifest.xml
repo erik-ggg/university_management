@@ -13,6 +13,15 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ui.AbsencesActivity"
+            android:label="@string/title_activity_absences"
+            android:parentActivityName=".ui.SubjectActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="es.uniovi.university_management.ui.SubjectActivity" />
+        </activity>
+        <activity
             android:name=".ui.TeachersActivity"
             android:label="@string/title_activity_teachers"
             android:parentActivityName=".ui.SubjectActivity"
@@ -29,19 +38,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.uniovi.university_management.ui.Subjects" />
         </activity>
-
-
         <activity
             android:name=".ui.SubjectActivity"
             android:label="@string/title_activity_subject"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName=".ui.Subjects">
+            android:parentActivityName=".ui.Subjects"
+            android:theme="@style/AppTheme.NoActionBar">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="es.uniovi.university_management.ui.Subjects" />
         </activity>
-
-
         <activity
             android:name=".ui.Subjects"
             android:label="@string/title_activity_subjects"

@@ -3,7 +3,6 @@ package es.uniovi.university_management.ui;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -11,9 +10,6 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
 
@@ -31,6 +27,9 @@ public class TeachersActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_teachers);
         setSupportActionBar(toolbar);
 
+        Bundle param = this.getIntent().getExtras();
+        String subjectName = param.getString("nombreAsignatura");
+
         //harcodeando los profesores
         ArrayList<Teacher> teachers = new ArrayList<Teacher>();
         teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "c")));
@@ -44,17 +43,10 @@ public class TeachersActivity extends AppCompatActivity {
         listaProfesoresView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         listaProfesoresView.setItemViewCacheSize(teachers.size());
 
-        TeachersAdapter mAdapter = new TeachersAdapter(teachers, getApplicationContext());
+        TeachersAdapter mAdapter = new TeachersAdapter(teachers, getApplicationContext(), TeachersActivity.this);
         listaProfesoresView.setAdapter(mAdapter);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        getSupportActionBar().setTitle("Profesores de " + subjectName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
