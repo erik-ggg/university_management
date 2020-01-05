@@ -8,4 +8,8 @@
     tools:context=".ui.TeachersActivity"
     tools:showIn="@layout/activity_teachers">
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/lista_profesores"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

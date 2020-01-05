@@ -7,11 +7,20 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
+
 import es.uniovi.university_management.R;
+import es.uniovi.university_management.classes.Office;
+import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.ui.adapters.TeachersAdapter;
 
 public class TeachersActivity extends AppCompatActivity {
 
@@ -21,6 +30,22 @@ public class TeachersActivity extends AppCompatActivity {
         setContentView(R.layout.activity_teachers);
         Toolbar toolbar = findViewById(R.id.toolbar_teachers);
         setSupportActionBar(toolbar);
+
+        //harcodeando los profesores
+        ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+        teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "c")));
+        teachers.add(new Teacher("Juan", "profesor2@uniovi.es", new Office("c", 3, "d", "c")));
+        //fin hardcoding
+
+        RecyclerView listaProfesoresView = (RecyclerView) findViewById(R.id.lista_profesores);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        listaProfesoresView.setLayoutManager(mLayoutManager);
+        listaProfesoresView.setItemAnimator(new DefaultItemAnimator());
+        listaProfesoresView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        listaProfesoresView.setItemViewCacheSize(teachers.size());
+
+        TeachersAdapter mAdapter = new TeachersAdapter(teachers, getApplicationContext());
+        listaProfesoresView.setAdapter(mAdapter);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
