@@ -27,6 +27,9 @@ public class TeachersActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar_teachers);
         setSupportActionBar(toolbar);
 
+        Bundle param = this.getIntent().getExtras();
+        String subjectName = param.getString("nombreAsignatura");
+
         //harcodeando los profesores
         ArrayList<Teacher> teachers = new ArrayList<Teacher>();
         teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "c")));
@@ -43,6 +46,7 @@ public class TeachersActivity extends AppCompatActivity {
         TeachersAdapter mAdapter = new TeachersAdapter(teachers, getApplicationContext(), TeachersActivity.this);
         listaProfesoresView.setAdapter(mAdapter);
 
+        getSupportActionBar().setTitle("Profesores de " + subjectName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 

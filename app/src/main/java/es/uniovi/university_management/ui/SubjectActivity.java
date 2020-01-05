@@ -16,6 +16,8 @@ import es.uniovi.university_management.ui.ui.main.SectionsPagerAdapter;
 
 public class SubjectActivity extends AppCompatActivity {
 
+    private String subjectName;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,7 +31,7 @@ public class SubjectActivity extends AppCompatActivity {
         tabs.setupWithViewPager(viewPager);
 
         Bundle param = this.getIntent().getExtras();
-        String subjectName = param.getString("nombreAsignatura");
+        subjectName = param.getString("nombreAsignatura");
         getSupportActionBar().setTitle(subjectName);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -51,11 +53,20 @@ public class SubjectActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.contact_teachers) {
-            Intent i = new Intent(this, TeachersActivity.class);
-            startActivity(i);
-            return true;
+            return createIntent(TeachersActivity.class);
+        }
+
+        if (id == R.id.absence_control) {
+            return createIntent(AbsencesActivity.class);
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean createIntent(Class c) {
+        Intent i = new Intent(this, c);
+        i.putExtra("nombreAsignatura", subjectName);
+        startActivity(i);
+        return true;
     }
 }

@@ -11,6 +11,6 @@
         android:id="@+id/manage_timetable"
         android:title="Gestionar Horario" />
     <item
-        android:id="@+id/control"
+        android:id="@+id/absence_control"
         android:title="Control Asistencia" />
 </menu>
