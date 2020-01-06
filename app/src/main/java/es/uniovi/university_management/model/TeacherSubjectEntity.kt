@@ -5,8 +5,8 @@ import androidx.room.PrimaryKey
 
 @Entity
 data class TeacherSubjectEntity(
-    var teacherId: Int,
-    var subjectId: Int
+    var teacherId: Long,
+    var subjectId: Long
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

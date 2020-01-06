@@ -14,11 +14,20 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.classes.Year;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.database.AppDatabase_Impl;
+import es.uniovi.university_management.model.OfficeEntity;
+import es.uniovi.university_management.model.SubjectEntity;
+import es.uniovi.university_management.model.TeacherEntity;
+import es.uniovi.university_management.model.TeacherSubjectEntity;
+import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
 
 public class Subjects extends AppCompatActivity {
@@ -37,22 +46,9 @@ public class Subjects extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         // TODO: esto deberia ser: el usuario selecciona un xml con los datos a cargar o boton de carga automatica
-        /*CSVReader reader = new CSVReader();
-        XmlReader xmlReader = new XmlReader();
-        List<Year> data = xmlReader.readAndParse(getApplicationContext());*/
 
-        subjectsAdded = new ArrayList<Subject>();
-        //harcodeando las asignaturas de la BBDD
-        teachers.add(new Teacher("Pepe", "pepe@uniovi.es", new Office("a", 2, "b", "c")));
-        subjectsAdded.add(new Subject("Diseño del Software", teachers));
-        subjectsAdded.add(new Subject("CPM", teachers));
-        subjectsAdded.add(new Subject("Álgebra", teachers));
-        //fin hardcoding
-
-        // Cargamos las asignaturas
-        /*for (Year year : data) {
-            subjectsToAdd.addAll(year.getSubjects());
-        }*/
+        subjectsAdded = new ArrayList<>();
+        subjectsAdded.addAll(getSavedSubjects());
 
         RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -63,8 +59,25 @@ public class Subjects extends AppCompatActivity {
 
         mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
         listaAsignaturasView.setAdapter(mAdapter);
+    }
 
+    private List<Subject> getSavedSubjects() {
+        final List<SubjectEntity>[] data = new List[]{new ArrayList<>()};
+        final List<Subject> subjects = new ArrayList<>();
 
+        Thread t = new Thread() {
+            public void run() {
+//                AppDatabase db = new AppDatabase_Impl();
+                data[0] = AppDatabase.Companion.getAppDatabase(getApplicationContext()).subjectDao().getAll();
+                for (SubjectEntity entity : data[0]) {
+                    Subject subject = new Subject(entity.getName());
+                    subject.setId(entity.getId());
+                    subjects.add(subject);
+                }
+            }
+        };
+        t.start();
+        return subjects;
     }
 
     @Override
@@ -101,15 +114,17 @@ public class Subjects extends AppCompatActivity {
 
     private void selectSubjects() {
         subjectsToAdd = new ArrayList<Subject>();
-        //harcodeando las asignaturas del csv
-        subjectsToAdd.add(new Subject("Computabilidad", teachers));
-        subjectsToAdd.add(new Subject("Bases de Datos", teachers));
-        subjectsToAdd.add(new Subject("Ingeniería de Requisitos", teachers));
-        //fin hardcoding
-        String[] listItems = new String[subjectsToAdd.size()];
+        // Leemos los datos del xml
+        XmlReader xmlReader = new XmlReader();
+        List<Year> data = xmlReader.readAndParse(getApplicationContext());
+        for (Year year : data) {
+            subjectsToAdd.addAll(year.getSubjects());
+        }
+        // Cargamos los nombres de las asignaturas
+        final String[] listItems = new String[subjectsToAdd.size()];
         for (int i = 0; i < subjectsToAdd.size(); i++)
             listItems[i] = subjectsToAdd.get(i).getName();
-        boolean[] checkedItems = new boolean[subjectsToAdd.size()]; //this will checked the items when user open the dialog
+        final boolean[] checkedItems = new boolean[subjectsToAdd.size()]; //this will checked the items when user open the dialog
         for (int i = 0; i < checkedItems.length; i++)
             checkedItems[i] = false;
         AlertDialog.Builder builder = new AlertDialog.Builder(Subjects.this)
@@ -130,11 +145,49 @@ public class Subjects extends AppCompatActivity {
                                 subjectsAdded.add(subjectsToAdd.get(i));
                         }
                         mAdapter.notifyDataSetChanged();
+                        saveInDB(subjectsAdded);
                         dialog.dismiss();
                     }
                 });
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private void saveInDB(final List<Subject> subjects) {
+        if (subjectsAdded.size() > 0) {
+            final List<SubjectEntity>[] all = new List[]{new ArrayList<>()};
+            Thread t = new Thread() {
+                    public void run() {
+                        AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
+//                    db.subjectDao().insertSubjects(subjects, db);
+                        List<Long> teachersId = new ArrayList<>();
+                        Long officeId = 1L;
+                        for (Subject subject : subjects) {
+                            for (Teacher teacher : subject.getTeachers()) {
+                                Log.d("Teacher", teacher.toString());
+                                Office office = teacher.getOffice();
+                                if (office != null) {
+                                    officeId = db.officeDao().insert(new OfficeEntity(office.getBuilding(),
+                                            office.getFloor(), office.getDoor(), office.getCoordinates()));
+                                    Log.d("OfficeId", officeId.toString());
+                                    teachersId.add(db.teacherDao().insert(new TeacherEntity(teacher.getName(),
+                                            teacher.getEmail(), officeId)));
+                                }
+                            }
+                            Long subjectId = db.subjectDao().insert(new SubjectEntity(
+                                    subject.getName(), 1L, 1L, 1L, 1L));
+                            Log.d("SubjectId", subjectId.toString());
+                            for (Long teacherId : teachersId) {
+                                db.teacherSubjectDao().insert(new TeacherSubjectEntity(teacherId, subjectId));
+                            }
+                            teachersId.clear();
+                        }
+                        all[0] = db.subjectDao().getAll();
+                    }
+            };
+            t.start();
+            System.out.println(all[0]);
+        }
     }
 
 

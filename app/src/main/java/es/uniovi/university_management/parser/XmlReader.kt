@@ -43,7 +43,9 @@ class XmlReader {
                                 office?.door = parser.nextText()
                             else if (name == "coordinates") {
                                 office?.coordinates = parser.nextText()
-                                teacher?.office = office
+                                if (office != null) {
+                                    teacher?.office = office
+                                }
                             }
                         } else if (isTeacher && !isOffice){
                             if (name == "name")
