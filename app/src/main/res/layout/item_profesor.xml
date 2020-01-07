@@ -8,7 +8,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view_teachers"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -21,58 +21,40 @@
 
         >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_margin="2dp">
 
-            <RelativeLayout
-                android:layout_width="250dp"
-                android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/nombre_profesor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text=""
+                android:textColor="@android:color/holo_blue_dark" />
 
-                <TextView
-                    android:id="@+id/nombre_profesor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text=""
-                    android:textColor="@android:color/holo_blue_dark" />
+            <TextView
+                android:id="@+id/email_profesor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/nombre_profesor"
+                android:layout_alignParentLeft="true"
+                android:text=""
+                android:textColor="@android:color/holo_green_dark"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/email_profesor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/nombre_profesor"
-                    android:text=""
-                    android:textColor="@android:color/holo_green_dark"
-                    android:textStyle="bold" />
+            <ImageButton
+                android:id="@+id/botonEliminarProfesor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
 
-            </RelativeLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <ImageButton
-                    android:id="@+id/botonEliminarProfesor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:contentDescription="@string/delete_item"
+                android:src="@android:drawable/arrow_down_float" />
 
 
-                    android:contentDescription="@string/delete_item"
-                    android:src="@android:drawable/ic_menu_delete" />
-
-                <ImageButton
-                    android:id="@+id/botonEditarProfesor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-
-                    android:contentDescription="@string/editar"
-                    android:src="@android:drawable/ic_menu_edit" />
-            </LinearLayout>
-
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </androidx.cardview.widget.CardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

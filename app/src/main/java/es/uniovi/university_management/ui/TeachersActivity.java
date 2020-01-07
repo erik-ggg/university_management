@@ -32,8 +32,8 @@ public class TeachersActivity extends AppCompatActivity {
 
         //harcodeando los profesores
         ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-        teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "c")));
-        teachers.add(new Teacher("Juan", "profesor2@uniovi.es", new Office("c", 3, "d", "c")));
+        teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "43.3548096,-5.8534646")));
+        teachers.add(new Teacher("Juan", "profesor2@uniovi.es", new Office("c", 3, "d", "43.3552562,-5.8530462")));
         //fin hardcoding
 
         RecyclerView listaProfesoresView = (RecyclerView) findViewById(R.id.lista_profesores);

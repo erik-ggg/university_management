@@ -6,12 +6,15 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import es.uniovi.university_management.R;
@@ -19,9 +22,10 @@ import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.ui.SubjectActivity;
 import es.uniovi.university_management.ui.Subjects;
 
-public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyViewHolder> {
+public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyViewHolder> implements Filterable {
 
     private List<Subject> listaAsignaturas;
+    private List<Subject> listaAsignaturasFiltered;
     private Context context;
     private Subjects subjects;
 
@@ -59,6 +63,41 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
         return listaAsignaturas.size();
     }
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence charSequence) {
+                String charString = charSequence.toString();
+                if (charString.isEmpty()) {
+                    listaAsignaturasFiltered = listaAsignaturas;
+                } else {
+                    List<Subject> filteredList = new ArrayList<>();
+                    for (Subject row : listaAsignaturas) {
+
+
+                        if (row.getName().toLowerCase().contains(charString.toLowerCase())) {
+                            filteredList.add(row);
+                        }
+                    }
+
+                    listaAsignaturasFiltered = filteredList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = listaAsignaturasFiltered;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
+                listaAsignaturasFiltered = (ArrayList<Subject>) filterResults.values;
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView titulo;
         public ImageButton eliminar;
@@ -77,7 +116,6 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
 
             });
 
-
         }
 
 
@@ -93,7 +131,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
                         (dialog, which) -> {
 
                             listaAsignaturas.remove(pos);
-                            SubjectsAdapter.this.notifyItemRemoved(pos);
+                            SubjectsAdapter.this.notifyDataSetChanged();
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())

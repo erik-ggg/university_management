@@ -32,5 +32,13 @@
     <string name="title_activity_settings">Ajustes</string>
     <string name="title_activity_subject">SubjectActivity</string>
     <string name="title_activity_subjects">Subjects</string>
+    <string name="search_hint">búsqueda</string>
+    <string name="send_email">Enviar E-mail</string>
+    <string name="get_despacho">Ubicación despacho</string>
+    <string name="del_mail">Eliminar</string>
+    <string name="title_activity_maps">Map</string>
+
+    <string name="google_maps_key">AIzaSyC9d6ZpTdh-r34oZM5LWzoFrlayHa8g6K0</string>
+
 
 </resources>

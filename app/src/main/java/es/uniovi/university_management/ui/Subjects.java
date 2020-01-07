@@ -1,6 +1,8 @@
 package es.uniovi.university_management.ui;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,7 +25,6 @@ import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.classes.Teacher;
 import es.uniovi.university_management.classes.Year;
 import es.uniovi.university_management.database.AppDatabase;
-import es.uniovi.university_management.database.AppDatabase_Impl;
 import es.uniovi.university_management.model.OfficeEntity;
 import es.uniovi.university_management.model.SubjectEntity;
 import es.uniovi.university_management.model.TeacherEntity;
@@ -35,6 +37,7 @@ public class Subjects extends AppCompatActivity {
     private ArrayList<Subject> subjectsAdded;
     private ArrayList<Subject> subjectsToAdd;
     SubjectsAdapter mAdapter;
+    private SearchView searchView;
     //esto es para poder crear asignaturas
     ArrayList<Teacher> teachers = new ArrayList<Teacher>();
 
@@ -84,6 +87,30 @@ public class Subjects extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_subjects, menu);
+        // Associate searchable configuration with the SearchView
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.app_bar_search)
+                .getActionView();
+        searchView.setSearchableInfo(searchManager
+                .getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+        // listening to search query text change
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                // filter recycler view when query submitted
+                mAdapter.getFilter().filter(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String query) {
+                // filter recycler view when text is changed
+                mAdapter.getFilter().filter(query);
+                return true;
+            }
+        });
         return true;
     }
 
@@ -103,7 +130,21 @@ public class Subjects extends AppCompatActivity {
             selectSubjects();
         }
 
+        if (id == R.id.app_bar_search) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        // close search view on back button pressed
+        if (!searchView.isIconified()) {
+            searchView.setIconified(true);
+            return;
+        }
+        super.onBackPressed();
     }
 
 
@@ -145,7 +186,7 @@ public class Subjects extends AppCompatActivity {
                                 subjectsAdded.add(subjectsToAdd.get(i));
                         }
                         mAdapter.notifyDataSetChanged();
-                        saveInDB(subjectsAdded);
+                        //saveInDB(subjectsAdded);
                         dialog.dismiss();
                     }
                 });
