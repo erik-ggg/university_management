@@ -154,7 +154,7 @@ public class Subjects extends AppCompatActivity {
     }
 
     private void selectSubjects() {
-        subjectsToAdd = new ArrayList<Subject>();
+        subjectsToAdd = new ArrayList<>();
         // Leemos los datos del xml
         XmlReader xmlReader = new XmlReader();
         List<Year> data = xmlReader.readAndParse(getApplicationContext());
