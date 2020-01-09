@@ -186,7 +186,7 @@ public class Subjects extends AppCompatActivity {
                                 subjectsAdded.add(subjectsToAdd.get(i));
                         }
                         mAdapter.notifyDataSetChanged();
-                        //saveInDB(subjectsAdded);
+                        saveInDB(subjectsAdded);
                         dialog.dismiss();
                     }
                 });
