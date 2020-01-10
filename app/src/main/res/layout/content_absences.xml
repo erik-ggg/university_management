@@ -10,7 +10,7 @@
     tools:showIn="@layout/activity_absences">
 
     <TextView
-        android:id="@+id/faltasTeoriaLabel"
+        android:id="@+id/notasLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
@@ -24,7 +24,7 @@
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/faltasPracticaLabel"
+        android:id="@+id/horarioLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"

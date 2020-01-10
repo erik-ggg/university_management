@@ -7,13 +7,7 @@
 
 
     <TextView
-        android:id="@+id/section_label"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/faltasTeoriaLabel"
+        android:id="@+id/notasLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
@@ -21,24 +15,25 @@
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/notasRecycler"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </androidx.recyclerview.widget.RecyclerView>
 
     <TextView
-        android:id="@+id/faltasPracticaLabel"
+        android:id="@+id/horarioLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
         android:text="@string/horario"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
-    <androidx.recyclerview.widget.RecyclerView
+    <TextView
+        android:id="@+id/textNextLesson"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-    </androidx.recyclerview.widget.RecyclerView>
+        android:layout_height="wrap_content"
+        android:text="@string/proxima_clase" />
 
     <RelativeLayout
         android:layout_width="match_parent"

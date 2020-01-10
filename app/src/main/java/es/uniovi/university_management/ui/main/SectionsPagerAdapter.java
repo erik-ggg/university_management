@@ -1,4 +1,4 @@
-package es.uniovi.university_management.ui.ui.main;
+package es.uniovi.university_management.ui.main;
 
 import android.content.Context;
 
@@ -28,16 +28,14 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-        //return PlaceholderFragment.newInstance(position + 1);
+
         switch (position) {
             case 0:
-                return FragmentFirst.newInstance(0);
+                return FragmentSubject.newInstance(0);
             case 1:
-                return FragmentFirst.newInstance(1);
+                return FragmentSubject.newInstance(1);
             case 2:
-                return FragmentFirst.newInstance(2);
+                return FragmentSubject.newInstance(2);
             default:
                 //assume you only have 3
                 throw new IllegalArgumentException();

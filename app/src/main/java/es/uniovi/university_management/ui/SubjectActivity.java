@@ -12,7 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.ui.ui.main.SectionsPagerAdapter;
+import es.uniovi.university_management.ui.main.SectionsPagerAdapter;
 
 public class SubjectActivity extends AppCompatActivity {
 
