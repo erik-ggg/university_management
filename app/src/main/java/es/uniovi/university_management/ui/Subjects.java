@@ -16,6 +16,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,12 +26,14 @@ import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Subject;
 import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.classes.TimeSubject;
 import es.uniovi.university_management.classes.Year;
 import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.OfficeEntity;
 import es.uniovi.university_management.model.SubjectEntity;
 import es.uniovi.university_management.model.TeacherEntity;
 import es.uniovi.university_management.model.TeacherSubjectEntity;
+import es.uniovi.university_management.parser.CSVReader;
 import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
 
@@ -146,7 +151,6 @@ public class Subjects extends AppCompatActivity {
         }
         super.onBackPressed();
     }
-
 
     public void goToSettings(MenuItem item) {
         Intent i = new Intent(this, SettingsActivity.class);

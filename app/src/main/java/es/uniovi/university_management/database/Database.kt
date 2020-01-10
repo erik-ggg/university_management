@@ -9,7 +9,7 @@ import es.uniovi.university_management.model.*
 
 @Database(entities = arrayOf(YearEntity::class, SubjectEntity::class, TeacherEntity::class, TeacherSubjectEntity::class,
     OfficeEntity::class, PracticeEntity::class, TheoryEntity::class, SeminaryEntity::class,
-    SectionEntity::class, TestEntity::class), exportSchema = false, version = 1)
+    SectionEntity::class, TestEntity::class, SectionTimeEntity::class), exportSchema = false, version = 1)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun yearDao(): YearDao
@@ -22,6 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun seminaryDao(): SeminaryDao
     abstract fun sectionDao(): SectionDao
     abstract fun testDao(): TestDao
+    abstract fun sectionTimeDao(): SectionTimeDao
 
 
     companion object {
