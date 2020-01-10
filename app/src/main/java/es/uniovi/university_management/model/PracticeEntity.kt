@@ -4,10 +4,10 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class PracticeEntity(var sectionId: Long?) {
+data class PracticeEntity(var subjectId: Long?) {
     constructor(): this(null)
     @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
+    var id: Long? = null
         set(id) {
             field = id
         }

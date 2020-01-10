@@ -9,7 +9,7 @@ data class SubjectEntity(
     val name: String,
     val yearId: Long
 ) {
-    constructor(name: String, yearId: Long, theoryId: Long?, practiceId: Long?, seminaryId: Long?) : this(name, yearId)
+//    constructor(name: String, yearId: Long, theoryId: Long?, practiceId: Long?, seminaryId: Long?) : this(name, yearId)
 
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null

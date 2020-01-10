@@ -15,9 +15,14 @@
         android:title="@string/action_anadir"
         app:showAsAction="never" />
     <item
+        android:id="@+id/action_addSchedule"
+        android:orderInCategory="2"
+        android:title="@string/action_addSchedule"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/action_settings"
         android:onClick="goToSettings"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 

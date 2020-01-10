@@ -11,6 +11,9 @@ interface SeminaryDao {
     @Query("SELECT * FROM seminaryentity")
     fun getAll(): List<SeminaryEntity>
 
+    @Query("SELECT * FROM seminaryentity WHERE subjectId == :id")
+    fun getBySubjectId(id: Long): SeminaryEntity
+
     @Insert
     fun insert(seminary: SeminaryEntity): Long
 

@@ -23,6 +23,7 @@ class CSVReader() {
 //        val fileReader = BufferedReader(context.assets.open("plan.csv").bufferedReader())
         var subjectsCalendar = mutableListOf<TimeSubject>()
         var currentSubject = ""
+        var currentType = -1
         var type = -1
         var startDates = mutableListOf<String>()
         var startTimes = mutableListOf<String>()
@@ -39,32 +40,29 @@ class CSVReader() {
                 if (line != "") {
                     val tokens = line.split(",")
                     val name = getSubjectName(tokens[0].split(".")[0])
+                    type = getSbujectType(tokens[0].split(".")[1])
                     // Si es la misma asignatura seguimos agregando datos
-                    if (currentSubject == name) {
-                        type = getSbujectType(tokens[0].split(".")[1])
-                        val startDate = tokens[1]
-                        val startTime = tokens[2]
-                        startDates.add(startDate)
-                        startTimes.add(startTime)
+                    if (currentSubject == name && currentType == type) {
+                        addDateAndTime(tokens, startDates, startTimes)
                     } else {
-                        // Cambiamos la asignatura actual, reiniciamos las listas y añadimos los datos
-                        subjectsCalendar.add(TimeSubject(currentSubject, type, startDates, startTimes))
+                        // Añadimos la asignatura con su tipo y las listas de datos
+                        subjectsCalendar.add(TimeSubject(currentSubject, currentType, startDates, startTimes))
 
+                        // Cambiamos las asignatura actual, si solo cambia el tipo esto no afecta
                         currentSubject = name
-                        startDates.clear()
+                        currentType = type
+                        startDates.clear() // limpiamos las listas
                         startTimes.clear()
 
-                        type = getSbujectType(tokens[0].split(".")[1])
-                        val startDate = tokens[1]
-                        val startTime = tokens[2]
-                        startDates.add(startDate)
-                        startTimes.add(startTime)
+                        addDateAndTime(tokens, startDates, startTimes)
                     }
                 }
                 line = fileReader.readLine()
                 // Establecemos la primera asignatura
-                if (currentSubject == "")
-                     currentSubject = getSubjectName(line.split(",")[0].split(".")[0])
+                if (currentSubject == "") {
+                    currentSubject = getSubjectName(line.split(",")[0].split(".")[0])
+                    currentType = getSbujectType(line.split(",")[0].split(".")[1])
+                }
                 if (line == null) {
                     subjectsCalendar.add(TimeSubject(currentSubject, type, startDates, startTimes))
                 }
@@ -74,6 +72,17 @@ class CSVReader() {
         }
 
         return subjectsCalendar
+    }
+
+    private fun addDateAndTime(
+        tokens: List<String>,
+        startDates: MutableList<String>,
+        startTimes: MutableList<String>
+    ) {
+        val startDate = tokens[1]
+        val startTime = tokens[2]
+        startDates.add(startDate)
+        startTimes.add(startTime)
     }
 
     private fun getSubjectName(token: String): String {
@@ -91,10 +100,12 @@ class CSVReader() {
     }
 
     private fun getSbujectType(token: String): Int {
+        // TODO: tutorias grupales
         when(token) {
             "T" -> return 1
             "L" -> return 2
             "S" -> return 3
+            "TG" -> return 1
             else -> return -1
         }
     }

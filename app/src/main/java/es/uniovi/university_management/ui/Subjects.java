@@ -6,10 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -19,7 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
@@ -30,9 +36,13 @@ import es.uniovi.university_management.classes.TimeSubject;
 import es.uniovi.university_management.classes.Year;
 import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.OfficeEntity;
+import es.uniovi.university_management.model.PracticeEntity;
+import es.uniovi.university_management.model.SectionTimeEntity;
+import es.uniovi.university_management.model.SeminaryEntity;
 import es.uniovi.university_management.model.SubjectEntity;
 import es.uniovi.university_management.model.TeacherEntity;
 import es.uniovi.university_management.model.TeacherSubjectEntity;
+import es.uniovi.university_management.model.TheoryEntity;
 import es.uniovi.university_management.parser.CSVReader;
 import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
@@ -55,6 +65,84 @@ public class Subjects extends AppCompatActivity {
 
         // TODO: esto deberia ser: el usuario selecciona un xml con los datos a cargar o boton de carga automatica
 
+        subjectsAdded = new ArrayList<>();
+        subjectsAdded.addAll(getSavedSubjects());
+
+        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+        listaAsignaturasView.setLayoutManager(mLayoutManager);
+        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
+        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
+
+        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
+        listaAsignaturasView.setAdapter(mAdapter);
+    }
+
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//    }
+//
+//    @Override
+//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//    }
+//
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        subjectsAdded = new ArrayList<>();
+//        subjectsAdded.addAll(getSavedSubjects());
+//
+//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        listaAsignaturasView.setLayoutManager(mLayoutManager);
+//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
+//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
+//
+//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
+//        listaAsignaturasView.setAdapter(mAdapter);
+//    }
+//
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        subjectsAdded = new ArrayList<>();
+//        subjectsAdded.addAll(getSavedSubjects());
+//
+//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        listaAsignaturasView.setLayoutManager(mLayoutManager);
+//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
+//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
+//
+//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
+//        listaAsignaturasView.setAdapter(mAdapter);
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        subjectsAdded = new ArrayList<>();
+//        subjectsAdded.addAll(getSavedSubjects());
+//
+//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
+//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
+//        listaAsignaturasView.setLayoutManager(mLayoutManager);
+//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
+//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
+//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
+//
+//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
+//        listaAsignaturasView.setAdapter(mAdapter);
+//    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         subjectsAdded = new ArrayList<>();
         subjectsAdded.addAll(getSavedSubjects());
 
@@ -135,11 +223,56 @@ public class Subjects extends AppCompatActivity {
             selectSubjects();
         }
 
+        if (id == R.id.action_addSchedule) {
+            loadSchedule();
+        }
+
         if (id == R.id.app_bar_search) {
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void loadSchedule() {
+        CSVReader reader = new CSVReader();
+        final List<TimeSubject> timeSubjects = reader.readCSV(getApplicationContext());
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
+                DateFormat formatter = new SimpleDateFormat("dd/mm/yyyy HH.mm");
+                List<SectionTimeEntity> sectionTimeEntities = new ArrayList<>();
+                Long targetId = -1L;
+
+                for (TimeSubject item: timeSubjects) {
+                    SubjectEntity subjectEntity = db.subjectDao().getByName(item.getName());
+                    switch (item.getType()) {
+                        case 1:
+                            targetId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
+                            break;
+                        case 2:
+                            targetId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
+                            break;
+                        case 3:
+                            targetId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
+                            break;
+                    }
+                    for (int i = 0; i < item.getStartDate().size(); i++) {
+                        String date = item.getStartDate().get(i);
+                        String time = item.getStartTime().get(i);
+                        date += " " + time;
+                        try {
+                            Date resDate = formatter.parse(date);
+                            db.sectionTimeDao().insert(new SectionTimeEntity(targetId, resDate.getTime(), resDate.getTime()));
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        };
+        t.start();
     }
 
     @Override
@@ -219,8 +352,10 @@ public class Subjects extends AppCompatActivity {
                                             teacher.getEmail(), officeId)));
                                 }
                             }
-                            Long subjectId = db.subjectDao().insert(new SubjectEntity(
-                                    subject.getName(), 1L, 1L, 1L, 1L));
+                            Long subjectId = db.subjectDao().insert(new SubjectEntity(subject.getName(), 1L));
+                            db.theoryDao().insert(new TheoryEntity(subjectId));
+                            db.practiceDao().insert(new PracticeEntity(subjectId));
+                            db.seminaryDao().insert(new SeminaryEntity(subjectId));
                             Log.d("SubjectId", subjectId.toString());
                             for (Long teacherId : teachersId) {
                                 db.teacherSubjectDao().insert(new TeacherSubjectEntity(teacherId, subjectId));
@@ -231,7 +366,6 @@ public class Subjects extends AppCompatActivity {
                     }
             };
             t.start();
-            System.out.println(all[0]);
         }
     }
 

@@ -38,7 +38,7 @@ public class FragmentSubject extends Fragment {
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
 
-        RecyclerView recyclerNotas = (RecyclerView) rootView.findViewById(R.id.notasRecycler);
+        RecyclerView recyclerNotas = rootView.findViewById(R.id.notasRecycler);
 
         recyclerNotas.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -114,7 +114,7 @@ public class FragmentSubject extends Fragment {
                 if (fechaHorario.compareTo(fechaActual) > 0)
                     return (df.format(fechaHorario) + " - " + hour.get(i));
             } catch (ParseException e) {
-                Log.i("Fechas", "No se ha podido parsear la fecha.");
+                Log.e("Fechas", "No se ha podido parsear la fecha.");
                 e.printStackTrace();
             }
 

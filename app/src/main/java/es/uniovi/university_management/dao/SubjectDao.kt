@@ -16,6 +16,9 @@ interface SubjectDao {
     @Query("SELECT * FROM subjectentity")
     fun getAll(): List<SubjectEntity>
 
+    @Query("SELECT * FROM subjectentity WHERE name == :name")
+    fun getByName(name: String): SubjectEntity
+
     @Insert
     fun insert(subject: SubjectEntity): Long
 
@@ -36,7 +39,7 @@ interface SubjectDao {
                 Log.d("OfficeId", officeId.toString())
                 teachersId.add(db?.teacherDao()?.insert(TeacherEntity(it?.name!!, it.email!!, officeId)))
             }
-            val subjectId = db?.subjectDao()?.insert(SubjectEntity(it.name, 1, 1, 1, 1))
+            val subjectId = db?.subjectDao()?.insert(SubjectEntity(it.name, 1))
             Log.d("SubjectId", subjectId.toString())
             teachersId.forEach {
                 db?.teacherSubjectDao()?.insert(TeacherSubjectEntity(it, subjectId!!))

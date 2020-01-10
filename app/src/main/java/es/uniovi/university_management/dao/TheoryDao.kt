@@ -11,6 +11,9 @@ interface TheoryDao {
     @Query("SELECT * FROM theoryentity")
     fun getAll(): List<TheoryEntity>
 
+    @Query("SELECT * FROM theoryentity WHERE subjectId == :id")
+    fun getBySubjectId(id: Long): TheoryEntity
+
     @Insert
     fun insert(theory: TheoryEntity): Long
 
