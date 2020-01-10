@@ -1,5 +1,6 @@
 package es.uniovi.university_management.ui.adapters;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.text.ParseException;
@@ -22,11 +24,13 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
 
     private TimeSubject horario;
     private Context context;
+    private Activity timeTableActivity;
 
 
-    public DatesAdapter(TimeSubject horario, Context context) {
+    public DatesAdapter(TimeSubject horario, Context context, Activity timeTableActivity) {
         this.horario = horario;
         this.context = context;
+        this.timeTableActivity = timeTableActivity;
     }
 
 
@@ -68,20 +72,22 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
 
 
     private void confirmaBorrado(int pos) {
-        /*AlertDialog.Builder builder = new AlertDialog.Builder(teachersActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(timeTableActivity);
 
-        builder.setTitle("Eliminar profesor")
-                .setMessage("El profesor se eliminará definitivamente, ¿está seguro?")
+        builder.setTitle("Eliminar fecha")
+                .setMessage("La fecha se eliminará definitivamente del horario, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
 
-                            horario.remove(pos);
-                            DatesAdapter.this.notifyItemRemoved(pos);
+                            horario.getStartDate().remove(pos);
+                            horario.getStartTime().remove(pos);
+                            DatesAdapter.this.notifyDataSetChanged();
+                            //TODO notificar cambios a la base de datos
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())
                 .show();
-    */
+
     }
 
 
