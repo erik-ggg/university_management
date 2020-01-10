@@ -1,4 +1,4 @@
-package es.uniovi.university_management.ui.ui.main;
+package es.uniovi.university_management.ui.main;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,17 +20,17 @@ import java.util.List;
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
 
-public class FragmentFirst extends Fragment {
+public class FragmentSubject extends Fragment {
 
     private int section;
 
-    public static FragmentFirst newInstance(int sectionNumber) {
-        FragmentFirst fragment = new FragmentFirst();
+    public static FragmentSubject newInstance(int sectionNumber) {
+        FragmentSubject fragment = new FragmentSubject();
         fragment.section = sectionNumber;
         return fragment;
     }
 
-    public FragmentFirst() {
+    public FragmentSubject() {
     }
 
     @Override

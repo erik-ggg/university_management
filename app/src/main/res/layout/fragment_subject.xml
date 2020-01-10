@@ -33,7 +33,7 @@
         android:id="@+id/textNextLesson"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:text="@string/proxima_clase" />
 
     <RelativeLayout
         android:layout_width="match_parent"

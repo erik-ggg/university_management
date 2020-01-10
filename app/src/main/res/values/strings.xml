@@ -41,6 +41,7 @@
     <string name="google_maps_key">AIzaSyC9d6ZpTdh-r34oZM5LWzoFrlayHa8g6K0</string>
     <string name="notas">NOTAS</string>
     <string name="horario">HORARIO</string>
+    <string name="proxima_clase">PRÓXIMA CLASE</string>
 
 
 </resources>
