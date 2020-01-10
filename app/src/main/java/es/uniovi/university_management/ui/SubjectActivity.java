@@ -24,14 +24,14 @@ public class SubjectActivity extends AppCompatActivity {
         setContentView(R.layout.activity_subject);
         Toolbar toolbar = findViewById(R.id.toolbar_subject);
         setSupportActionBar(toolbar);
-        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        Bundle param = this.getIntent().getExtras();
+        subjectName = param.getString("nombreAsignatura");
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager(), subjectName);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
 
-        Bundle param = this.getIntent().getExtras();
-        subjectName = param.getString("nombreAsignatura");
         getSupportActionBar().setTitle(subjectName);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

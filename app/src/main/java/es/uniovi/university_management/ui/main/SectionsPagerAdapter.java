@@ -20,10 +20,12 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
+    private String subjectName;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public SectionsPagerAdapter(Context context, FragmentManager fm, String subjectName) {
         super(fm);
         mContext = context;
+        this.subjectName = subjectName;
     }
 
     @Override
@@ -31,11 +33,11 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return FragmentSubject.newInstance(0);
+                return FragmentSubject.newInstance(0, subjectName);
             case 1:
-                return FragmentSubject.newInstance(1);
+                return FragmentSubject.newInstance(1, subjectName);
             case 2:
-                return FragmentSubject.newInstance(2);
+                return FragmentSubject.newInstance(2, subjectName);
             default:
                 //assume you only have 3
                 throw new IllegalArgumentException();

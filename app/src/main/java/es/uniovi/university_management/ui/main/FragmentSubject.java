@@ -23,10 +23,12 @@ import es.uniovi.university_management.classes.TimeSubject;
 public class FragmentSubject extends Fragment {
 
     private int section;
+    private String subjectName;
 
-    public static FragmentSubject newInstance(int sectionNumber) {
+    public static FragmentSubject newInstance(int sectionNumber, String subject) {
         FragmentSubject fragment = new FragmentSubject();
         fragment.section = sectionNumber;
+        fragment.subjectName = subject;
         return fragment;
     }
 
