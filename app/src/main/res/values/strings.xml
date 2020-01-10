@@ -43,6 +43,6 @@
     <string name="horario">HORARIO</string>
     <string name="proxima_clase">PRÓXIMA CLASE</string>
     <string name="title_activity_time_table">TimeTableActivity</string>
-
+    <string name="action_addSchedule">Añadir horario</string>
 
 </resources>
