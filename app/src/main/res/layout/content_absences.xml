@@ -1,45 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".ui.AbsencesActivity"
     tools:showIn="@layout/activity_absences">
 
-    <TextView
-        android:id="@+id/notasLabel"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:text="TEORÍA"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        android:orientation="vertical">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/notasLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="TEORÍA"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
-    </androidx.recyclerview.widget.RecyclerView>
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_dates_practic"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
-    <TextView
-        android:id="@+id/horarioLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:text="PRÁCTICAS"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
+        <TextView
+            android:id="@+id/horarioLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="PRÁCTICAS"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_dates_theory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/faltasSeminarioLabel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
-        android:text="SEMINARIO"
-        android:textColor="@color/common_google_signin_btn_text_dark_default" />
-</LinearLayout>
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/faltasSeminarioLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorAccent"
+            android:text="SEMINARIO"
+            android:textColor="@color/common_google_signin_btn_text_dark_default" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_dates_sem"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+
+</ScrollView>

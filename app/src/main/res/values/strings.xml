@@ -42,7 +42,7 @@
     <string name="notas">NOTAS</string>
     <string name="horario">HORARIO</string>
     <string name="proxima_clase">PRÓXIMA CLASE</string>
-    <string name="action_addSchedule">Añadir horario</string>
+    <string name="title_activity_time_table">TimeTableActivity</string>
 
 
 </resources>

@@ -60,6 +60,10 @@ public class SubjectActivity extends AppCompatActivity {
             return createIntent(AbsencesActivity.class);
         }
 
+        if (id == R.id.manage_timetable) {
+            return createIntent(TimeTableActivity.class);
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
