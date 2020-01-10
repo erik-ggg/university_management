@@ -1,7 +1,6 @@
 package es.uniovi.university_management.ui.main;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +10,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.util.DateParser;
 
 public class FragmentSubject extends Fragment {
 
@@ -100,28 +98,15 @@ public class FragmentSubject extends Fragment {
     }
 
     private String getNextLesson(TimeSubject horario) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
-        Date fechaActual = new Date();
-        Date fechaHorario = null;
+        DateParser parser = new DateParser();
         List<String> date = horario.getStartDate();
         List<String> hour = horario.getStartTime();
-        String temporal = "";
+        Date fechaActual = new Date();
         for (int i = 0; i < date.size(); i++) {
-            if (hour.get(i).length() == 4)
-                temporal = "0" + hour.get(i);
-            else
-                temporal = hour.get(i);
-            try {
-                fechaHorario = df.parse(date.get(i) + " " + temporal);
+            Date fechaHorario = parser.stringToDate(date.get(i), hour.get(i));
                 if (fechaHorario.compareTo(fechaActual) > 0)
-                    return (df.format(fechaHorario) + " - " + hour.get(i));
-            } catch (ParseException e) {
-                Log.e("Fechas", "No se ha podido parsear la fecha.");
-                e.printStackTrace();
-            }
-
+                    return (date.get(i) + " - " + hour.get(i));
         }
-
         return ("No hay más clases para esta asignatura");
     }
 }

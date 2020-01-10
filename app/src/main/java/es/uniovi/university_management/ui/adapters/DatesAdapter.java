@@ -2,7 +2,6 @@ package es.uniovi.university_management.ui.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
@@ -47,7 +42,6 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         String dateString = horario.getStartDate().get(position);
         String hoursString = horario.getStartTime().get(position);
-        Date date = parsearFecha(dateString);
         holder.day.setText(dateString);
         holder.hours.setText(hoursString);
         holder.eliminar.setOnClickListener(view -> {
@@ -58,17 +52,6 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
 
     }
 
-    private Date parsearFecha(String dateString) {
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
-        Date fechaHorario = null;
-        try {
-            fechaHorario = df.parse(dateString);
-        } catch (ParseException e) {
-            Log.i("Fechas", "No se ha podido parsear la fecha.");
-            e.printStackTrace();
-        }
-        return fechaHorario;
-    }
 
 
     private void confirmaBorrado(int pos) {

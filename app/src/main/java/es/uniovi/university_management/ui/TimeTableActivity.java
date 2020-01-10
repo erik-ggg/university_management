@@ -5,6 +5,7 @@ import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.TimePicker;
@@ -31,7 +32,15 @@ public class TimeTableActivity extends AppCompatActivity {
 
     private static final String CERO = "0";
     private int sectionSelected;
+    private String newDate;
+    private String newHour;
     public final Calendar c = Calendar.getInstance();
+    private TimeSubject horarioTeoria;
+    private TimeSubject horarioPracticas;
+    private TimeSubject horarioSeminarios;
+    private DatesAdapter adapterTeoria;
+    private DatesAdapter adapterPractica;
+    private DatesAdapter adapterSeminario;
 
 
     @Override
@@ -88,14 +97,14 @@ public class TimeTableActivity extends AppCompatActivity {
         startTimes3.add("15.00");
         startTimes3.add("14.00");
         startTimes3.add("15.00");
-        TimeSubject horarioTeoria = new TimeSubject("Asignatura", 1, startDates1, startTimes1);
-        TimeSubject horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
-        TimeSubject horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
+        horarioTeoria = new TimeSubject("Asignatura", 1, startDates1, startTimes1);
+        horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
+        horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
         //fin hardcoding
 
-        DatesAdapter adapterTeoria = new DatesAdapter(horarioTeoria, getApplicationContext(), TimeTableActivity.this);
-        DatesAdapter adapterPractica = new DatesAdapter(horarioPracticas, getApplicationContext(), TimeTableActivity.this);
-        DatesAdapter adapterSeminario = new DatesAdapter(horarioSeminarios, getApplicationContext(), TimeTableActivity.this);
+        adapterTeoria = new DatesAdapter(horarioTeoria, getApplicationContext(), TimeTableActivity.this);
+        adapterPractica = new DatesAdapter(horarioPracticas, getApplicationContext(), TimeTableActivity.this);
+        adapterSeminario = new DatesAdapter(horarioSeminarios, getApplicationContext(), TimeTableActivity.this);
         listaTeoriaView.setAdapter(adapterTeoria);
         listaPracticaView.setAdapter(adapterPractica);
         listaSeminarioView.setAdapter(adapterSeminario);
@@ -112,6 +121,22 @@ public class TimeTableActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        if (item.getItemId() == android.R.id.home) // Press Back Icon
+        {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
     private void showSectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -138,12 +163,13 @@ public class TimeTableActivity extends AppCompatActivity {
         DatePickerFragment newFragment = DatePickerFragment.newInstance(new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                // +1 because January is zero
-                final String selectedDate = day + " / " + (month + 1) + " / " + year;
 
                 //TODO crear el objeto timeSUbject
-                //etPlannedDate.setText(selectedDate);
-
+                String diaFormateado = (day < 10) ? String.valueOf(CERO + day) : String.valueOf(day);
+                // +1 because January is zero
+                String mesFormateado = (month + 1 < 10) ? String.valueOf(CERO + (month + 1)) : String.valueOf(month + 1);
+                newDate = diaFormateado + "/" + mesFormateado + "/" + year;
+                Log.i("Selección de la fecha", diaFormateado + " / " + mesFormateado + " / " + year);
                 showTimePickerDialog();
             }
         });
@@ -158,25 +184,42 @@ public class TimeTableActivity extends AppCompatActivity {
                 String horaFormateada = (hourOfDay < 10) ? String.valueOf(CERO + hourOfDay) : String.valueOf(hourOfDay);
 
                 String minutoFormateado = (minute < 10) ? String.valueOf(CERO + minute) : String.valueOf(minute);
-                //Obtengo el valor a.m. o p.m., dependiendo de la selección del usuario
-                String AM_PM;
-                if (hourOfDay < 12) {
-                    AM_PM = "a.m.";
-                } else {
-                    AM_PM = "p.m.";
-                }
-                //Muestro la hora con el formato deseado
 
                 //TODO crear la hora
-                //etHora.setText(horaFormateada + ":" + minutoFormateado + " " + AM_PM);
+
                 Log.i("Selección de hora", horaFormateada + ":" + minutoFormateado);
+                newHour = horaFormateada + "." + minutoFormateado;
+                saveDate(sectionSelected, newDate, newHour);
+
             }
-            //Estos valores deben ir en ese orden
-            //Al colocar en false se muestra en formato 12 horas y true en formato 24 horas
-            //Pero el sistema devuelve la hora en formato 24 horas
+
         }, c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE), true);
 
         recogerHora.show();
+    }
+
+    private void saveDate(int sectionSelected, String newDate, String newHour) {
+        switch (sectionSelected) {
+            //TODO guardar en la base de datos
+            case 1:
+                horarioTeoria.getStartDate().add(newDate);
+                horarioTeoria.getStartTime().add(newHour);
+                adapterTeoria.notifyDataSetChanged();
+                break;
+            case 2:
+                horarioPracticas.getStartDate().add(newDate);
+                horarioPracticas.getStartTime().add(newHour);
+                adapterPractica.notifyDataSetChanged();
+                break;
+            case 3:
+                horarioSeminarios.getStartDate().add(newDate);
+                horarioSeminarios.getStartTime().add(newHour);
+                adapterSeminario.notifyDataSetChanged();
+                break;
+            default:
+                //assume you only have 3
+                throw new IllegalArgumentException();
+        }
     }
 
     private void manageLayout(RecyclerView recycler, RecyclerView.LayoutManager mLayoutManager) {
