@@ -21,7 +21,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -63,7 +62,7 @@ public class Subjects extends AppCompatActivity {
         // TODO: esto deberia ser: el usuario selecciona un xml con los datos a cargar o boton de carga automatica
 
         subjectsAdded = new ArrayList<>();
-//        getSavedSubjects();
+        getSavedSubjects();
 
         RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -79,7 +78,7 @@ public class Subjects extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        getSavedSubjects();
+        //getSavedSubjects();
     }
 
     private List<Subject> getSavedSubjects() {
@@ -115,6 +114,7 @@ public class Subjects extends AppCompatActivity {
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
         // listening to search query text change
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

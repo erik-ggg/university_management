@@ -19,6 +19,8 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Subject;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.SubjectEntity;
 import es.uniovi.university_management.ui.SubjectActivity;
 import es.uniovi.university_management.ui.Subjects;
 
@@ -31,6 +33,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
 
     public SubjectsAdapter(List<Subject> listaAsignaturas, Context context, Subjects subjects) {
         this.listaAsignaturas = listaAsignaturas;
+        listaAsignaturasFiltered = listaAsignaturas;
         this.context = context;
         this.subjects = subjects;
     }
@@ -129,9 +132,22 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
                 .setMessage("La asignatura se eliminará definitivamente, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
+                            //String asignaturaBorra = listaAsignaturasFiltered.get(pos).getName();
 
-                            listaAsignaturas.remove(pos);
+
+                            Thread t = new Thread() {
+                                public void run() {
+                                    AppDatabase db = AppDatabase.Companion.getAppDatabase(context);
+                                    SubjectEntity subjectEntity = db.subjectDao().getByName(listaAsignaturas.get(pos).getName());
+                                    db.subjectDao().delete(subjectEntity);
+                                    listaAsignaturas.remove(pos);
+
+                                }
+                            };
+                            t.start();
                             SubjectsAdapter.this.notifyDataSetChanged();
+
+
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())

@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -19,10 +19,10 @@ import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.classes.Test;
 import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.SectionTimeEntity;
-import es.uniovi.university_management.model.SubjectEntity;
+import es.uniovi.university_management.ui.adapters.SubjectAdapter;
 
 public class FragmentSubject extends Fragment {
 
@@ -57,6 +57,7 @@ public class FragmentSubject extends Fragment {
         final List<Date> theoryDate = new ArrayList<>();
         final List<Date> practiceDate = new ArrayList<>();
         final List<Date> seminaryDate = new ArrayList<>();
+
 
         // Carga desde base de datos
         Thread t1 = new Thread() {
@@ -106,6 +107,23 @@ public class FragmentSubject extends Fragment {
             }
         };
         t1.start();
+
+
+        //harcodeando las notas
+        ArrayList<Test> notas = new ArrayList<Test>();
+        notas.add(new Test("examen 1", 5.2));
+        notas.add(new Test("examen 2", 8.7));
+        //fin hardcoding
+
+        RecyclerView listaNotasView = (RecyclerView) rootView.findViewById(R.id.notasRecycler);
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(rootView.getContext());
+        listaNotasView.setLayoutManager(mLayoutManager);
+        listaNotasView.setItemAnimator(new DefaultItemAnimator());
+        listaNotasView.addItemDecoration(new DividerItemDecoration(rootView.getContext(), LinearLayoutManager.VERTICAL));
+
+
+        SubjectAdapter mAdapter = new SubjectAdapter(notas, rootView.getContext());
+        listaNotasView.setAdapter(mAdapter);
 
         //harcodeando los horarios
 
