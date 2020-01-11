@@ -25,6 +25,7 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class Subjects extends AppCompatActivity {
         // TODO: esto deberia ser: el usuario selecciona un xml con los datos a cargar o boton de carga automatica
 
         subjectsAdded = new ArrayList<>();
-        subjectsAdded.addAll(getSavedSubjects());
+//        getSavedSubjects();
 
         RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -79,82 +80,10 @@ public class Subjects extends AppCompatActivity {
         listaAsignaturasView.setAdapter(mAdapter);
     }
 
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//    }
-//
-//    @Override
-//    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
-//        super.onRestoreInstanceState(savedInstanceState);
-//    }
-//
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        subjectsAdded = new ArrayList<>();
-//        subjectsAdded.addAll(getSavedSubjects());
-//
-//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        listaAsignaturasView.setLayoutManager(mLayoutManager);
-//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
-//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
-//
-//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
-//        listaAsignaturasView.setAdapter(mAdapter);
-//    }
-//
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        subjectsAdded = new ArrayList<>();
-//        subjectsAdded.addAll(getSavedSubjects());
-//
-//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        listaAsignaturasView.setLayoutManager(mLayoutManager);
-//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
-//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
-//
-//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
-//        listaAsignaturasView.setAdapter(mAdapter);
-//    }
-//
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        subjectsAdded = new ArrayList<>();
-//        subjectsAdded.addAll(getSavedSubjects());
-//
-//        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
-//        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-//        listaAsignaturasView.setLayoutManager(mLayoutManager);
-//        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
-//        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-//        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
-//
-//        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
-//        listaAsignaturasView.setAdapter(mAdapter);
-//    }
-
     @Override
-    protected void onStop() {
-        super.onStop();
-        subjectsAdded = new ArrayList<>();
-        subjectsAdded.addAll(getSavedSubjects());
-
-        RecyclerView listaAsignaturasView = (RecyclerView) findViewById(R.id.lista_asignaturas);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
-        listaAsignaturasView.setLayoutManager(mLayoutManager);
-        //listaAsignaturasView.setItemAnimator(new DefaultItemAnimator());
-        //listaAsignaturasView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
-        listaAsignaturasView.setItemViewCacheSize(subjectsAdded.size());
-
-        mAdapter = new SubjectsAdapter(subjectsAdded, getApplicationContext(), Subjects.this);
-        listaAsignaturasView.setAdapter(mAdapter);
+    protected void onResume() {
+        super.onResume();
+        getSavedSubjects();
     }
 
     private List<Subject> getSavedSubjects() {
@@ -170,6 +99,7 @@ public class Subjects extends AppCompatActivity {
                     subject.setId(entity.getId());
                     subjects.add(subject);
                 }
+                subjectsAdded.addAll(subjects);
             }
         };
         t.start();
@@ -241,32 +171,34 @@ public class Subjects extends AppCompatActivity {
             @Override
             public void run() {
                 AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
-                DateFormat formatter = new SimpleDateFormat("dd/mm/yyyy HH.mm");
+                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH.mm");
                 List<SectionTimeEntity> sectionTimeEntities = new ArrayList<>();
                 Long targetId = -1L;
 
                 for (TimeSubject item: timeSubjects) {
                     SubjectEntity subjectEntity = db.subjectDao().getByName(item.getName());
-                    switch (item.getType()) {
-                        case 1:
-                            targetId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
-                            break;
-                        case 2:
-                            targetId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
-                            break;
-                        case 3:
-                            targetId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
-                            break;
-                    }
-                    for (int i = 0; i < item.getStartDate().size(); i++) {
-                        String date = item.getStartDate().get(i);
-                        String time = item.getStartTime().get(i);
-                        date += " " + time;
-                        try {
-                            Date resDate = formatter.parse(date);
-                            db.sectionTimeDao().insert(new SectionTimeEntity(targetId, resDate.getTime(), resDate.getTime()));
-                        } catch (ParseException e) {
-                            e.printStackTrace();
+                    if (subjectEntity != null) {
+                        switch (item.getType()) {
+                            case 1:
+                                targetId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
+                                break;
+                            case 2:
+                                targetId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
+                                break;
+                            case 3:
+                                targetId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
+                                break;
+                        }
+                        for (int i = 0; i < item.getStartDate().size(); i++) {
+                            String date = item.getStartDate().get(i);
+                            String time = item.getStartTime().get(i);
+                            date += time;
+                            try {
+                                Date resDate = formatter.parse(date);
+                                db.sectionTimeDao().insert(new SectionTimeEntity(targetId, resDate.getTime(), resDate.getTime()));
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
                         }
                     }
                 }

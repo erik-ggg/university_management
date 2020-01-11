@@ -11,14 +11,19 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.SectionTimeEntity;
+import es.uniovi.university_management.model.SubjectEntity;
 
 public class FragmentSubject extends Fragment {
 
@@ -38,90 +43,146 @@ public class FragmentSubject extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_subject, container, false);
 
         RecyclerView recyclerNotas = rootView.findViewById(R.id.notasRecycler);
 
         recyclerNotas.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        final AppDatabase[] db = new AppDatabase[1];
+        final Long[] subjectId = new Long[1];
+        final Long[] theoryId = new Long[1];
+        final Long[] practiceId = new Long[1];
+        final Long[] seminaryId = new Long[1];
+
+        final List<Date> theoryDate = new ArrayList<>();
+        final List<Date> practiceDate = new ArrayList<>();
+        final List<Date> seminaryDate = new ArrayList<>();
+
+        // Carga desde base de datos
+        Thread t1 = new Thread() {
+            @Override
+            public void run() {
+                db[0] = AppDatabase.Companion.getAppDatabase(getContext());
+                Integer id = db[0].subjectDao().getByName(subjectName).getId();
+                if (id != null) {
+                    subjectId[0] = Long.valueOf(id);
+                    theoryId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
+                    practiceId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
+                    seminaryId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
+                }
+
+                List<SectionTimeEntity> theorySectionsTime = db[0].sectionTimeDao().getBySectionId(theoryId[0]);
+                Date date;
+                for (SectionTimeEntity item : theorySectionsTime) {
+                    date = new Date(item.getStartDate());
+                    theoryDate.add(date);
+                }
+
+                List<SectionTimeEntity> practiceSectionsTime = db[0].sectionTimeDao().getBySectionId(practiceId[0]);
+                for (SectionTimeEntity item : practiceSectionsTime) {
+                    date = new Date(item.getStartDate());
+                    practiceDate.add(date);
+                }
+
+                List<SectionTimeEntity> seminarySectionsTime = db[0].sectionTimeDao().getBySectionId(seminaryId[0]);
+                for (SectionTimeEntity item : seminarySectionsTime) {
+                    date = new Date(item.getStartDate());
+                    seminaryDate.add(date);
+                }
+
+                TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
+                switch (section) {
+                    case 0:
+                        nextLesson.setText(getNextLesson(theoryDate));
+                        break;
+                    case 1:
+                        nextLesson.setText(getNextLesson(practiceDate));
+                        break;
+                    case 2:
+                        nextLesson.setText(getNextLesson(seminaryDate));
+                        break;
+
+                }
+            }
+        };
+        t1.start();
+
         //harcodeando los horarios
 
-        ArrayList startDates1 = new ArrayList<>();
-        startDates1.add("07/01/2020");
-        startDates1.add("10/01/2020");
-        startDates1.add("14/01/2020");
-        startDates1.add("17/01/2020");
-        ArrayList startTimes1 = new ArrayList<>();
-        startTimes1.add("9.00");
-        startTimes1.add("10.00");
-        startTimes1.add("9.00");
-        startTimes1.add("10.00");
-        ArrayList startDates2 = new ArrayList<>();
-        startDates2.add("08/01/2020");
-        startDates2.add("11/01/2020");
-        startDates2.add("15/01/2020");
-        startDates2.add("18/01/2020");
-        ArrayList startTimes2 = new ArrayList<>();
-        startTimes2.add("9.00");
-        startTimes2.add("10.00");
-        startTimes2.add("9.00");
-        startTimes2.add("10.00");
-        ArrayList startDates3 = new ArrayList<>();
-        startDates3.add("08/11/2019");
-        startDates3.add("11/11/2019");
-        startDates3.add("15/11/2019");
-        startDates3.add("18/11/2019");
-        ArrayList startTimes3 = new ArrayList<>();
-        startTimes3.add("14.00");
-        startTimes3.add("15.00");
-        startTimes3.add("14.00");
-        startTimes3.add("15.00");
-        TimeSubject horarioTeoria = new TimeSubject("Asignatura", 1, startDates1, startTimes1);
-        TimeSubject horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
-        TimeSubject horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
+//        ArrayList startDates1 = new ArrayList<>();
+//        startDates1.add("07/01/2020");
+//        startDates1.add("10/01/2020");
+//        startDates1.add("14/01/2020");
+//        startDates1.add("17/01/2020");
+//        ArrayList startTimes1 = new ArrayList<>();
+//        startTimes1.add("9.00");
+//        startTimes1.add("10.00");
+//        startTimes1.add("9.00");
+//        startTimes1.add("10.00");
+//        ArrayList startDates2 = new ArrayList<>();
+//        startDates2.add("08/01/2020");
+//        startDates2.add("11/01/2020");
+//        startDates2.add("15/01/2020");
+//        startDates2.add("18/01/2020");
+//        ArrayList startTimes2 = new ArrayList<>();
+//        startTimes2.add("9.00");
+//        startTimes2.add("10.00");
+//        startTimes2.add("9.00");
+//        startTimes2.add("10.00");
+//        ArrayList startDates3 = new ArrayList<>();
+//        startDates3.add("08/11/2019");
+//        startDates3.add("11/11/2019");
+//        startDates3.add("15/11/2019");
+//        startDates3.add("18/11/2019");
+//        ArrayList startTimes3 = new ArrayList<>();
+//        startTimes3.add("14.00");
+//        startTimes3.add("15.00");
+//        startTimes3.add("14.00");
+//        startTimes3.add("15.00");
+//        TimeSubject horarioTeoria = new TimeSubject("Asignatura", 1, theorySectionsTime.get, startTimes1);
+//        TimeSubject horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
+//        TimeSubject horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
         //fin hardcoding
-
-        TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
-        switch (section) {
-            case 0:
-                nextLesson.setText(getNextLesson(horarioTeoria));
-                break;
-            case 1:
-                nextLesson.setText(getNextLesson(horarioPracticas));
-                break;
-            case 2:
-                nextLesson.setText(getNextLesson(horarioSeminarios));
-                break;
-
-        }
-
-
         return rootView;
     }
 
-    private String getNextLesson(TimeSubject horario) {
+    private String getNextLesson(List<Date> dates) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
         Date fechaActual = new Date();
-        Date fechaHorario = null;
-        List<String> date = horario.getStartDate();
-        List<String> hour = horario.getStartTime();
-        String temporal = "";
-        for (int i = 0; i < date.size(); i++) {
-            if (hour.get(i).length() == 4)
-                temporal = "0" + hour.get(i);
-            else
-                temporal = hour.get(i);
-            try {
-                fechaHorario = df.parse(date.get(i) + " " + temporal);
-                if (fechaHorario.compareTo(fechaActual) > 0)
-                    return (df.format(fechaHorario) + " - " + hour.get(i));
-            } catch (ParseException e) {
-                Log.e("Fechas", "No se ha podido parsear la fecha.");
-                e.printStackTrace();
+        for (Date item : dates) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(item);
+            if (item.compareTo(fechaActual) > 0) {
+                return df.format(item);
             }
-
         }
-
-        return ("No hay más clases para esta asignatura");
+        return "Clases finalizadas.";
     }
+
+//    private String getNextLesson(TimeSubject horario) {
+//        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
+//        Date fechaActual = new Date();
+//        Date fechaHorario = null;
+//        List<String> date = horario.getStartDate();
+//        List<String> hour = horario.getStartTime();
+//        String temporal = "";
+//        for (int i = 0; i < date.size(); i++) {
+//            if (hour.get(i).length() == 4)
+//                temporal = "0" + hour.get(i);
+//            else
+//                temporal = hour.get(i);
+//            try {
+//                fechaHorario = df.parse(date.get(i) + " " + temporal);
+//                if (fechaHorario.compareTo(fechaActual) > 0)
+//                    return (df.format(fechaHorario) + " - " + hour.get(i));
+//            } catch (ParseException e) {
+//                Log.e("Fechas", "No se ha podido parsear la fecha.");
+//                e.printStackTrace();
+//            }
+//
+//        }
+//
+//        return ("No hay más clases para esta asignatura");
+//    }
 }

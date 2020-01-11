@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class TestEntity(val sectionId: Long, val mark: Double) {
+data class TestEntity(val sectionId: Long, val name: String, val mark: Double) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
         set(id) {

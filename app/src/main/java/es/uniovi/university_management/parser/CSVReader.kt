@@ -15,6 +15,7 @@ class CSVReader() {
     private val SI = "SI"
     private val SEV = "SEV"
     private val SDM = "SDM"
+    private val SO = "SO"
 
     fun readCSV(context: Context): MutableList<TimeSubject> {
         val inputStream: InputStream = context.assets.open("plan.csv")
@@ -51,8 +52,8 @@ class CSVReader() {
                         // Cambiamos las asignatura actual, si solo cambia el tipo esto no afecta
                         currentSubject = name
                         currentType = type
-                        startDates.clear() // limpiamos las listas
-                        startTimes.clear()
+                        startDates = mutableListOf()
+                        startTimes = mutableListOf()
 
                         addDateAndTime(tokens, startDates, startTimes)
                     }
@@ -95,6 +96,7 @@ class CSVReader() {
             SI -> return "Sistemas Inteligentes"
             SEV -> return "Software de Entretenimiento y Videojuegos"
             SDM -> return "Software y Dispositivos Móviles"
+            SO -> return "Sistemas Operativos"
             else -> return ""
         }
     }

@@ -11,6 +11,9 @@ interface SectionTimeDao {
     @Query("SELECT * FROM sectiontimeentity")
     fun getAll(): List<SectionTimeEntity>
 
+    @Query("SELECT * FROM sectiontimeentity WHERE sectionId = :id")
+    fun getBySectionId(id: Long): List<SectionTimeEntity>
+
     @Insert
     fun insert(section: SectionTimeEntity): Long
 
