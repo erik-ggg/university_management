@@ -42,6 +42,7 @@ import es.uniovi.university_management.model.TeacherSubjectEntity;
 import es.uniovi.university_management.model.TheoryEntity;
 import es.uniovi.university_management.parser.CSVReader;
 import es.uniovi.university_management.parser.XmlReader;
+import es.uniovi.university_management.repositories.SubjectRepository;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
 
 public class Subjects extends AppCompatActivity {
@@ -82,24 +83,9 @@ public class Subjects extends AppCompatActivity {
         getSavedSubjects();
     }
 
-    private List<Subject> getSavedSubjects() {
-        final List<SubjectEntity>[] data = new List[]{new ArrayList<>()};
-        final List<Subject> subjects = new ArrayList<>();
-
-        Thread t = new Thread() {
-            public void run() {
-//                AppDatabase db = new AppDatabase_Impl();
-                data[0] = AppDatabase.Companion.getAppDatabase(getApplicationContext()).subjectDao().getAll();
-                for (SubjectEntity entity : data[0]) {
-                    Subject subject = new Subject(entity.getName());
-                    subject.setId(entity.getId());
-                    subjects.add(subject);
-                }
-                subjectsAdded.addAll(subjects);
-            }
-        };
-        t.start();
-        return subjects;
+    private void getSavedSubjects() {
+        SubjectRepository repository = new SubjectRepository();
+        repository.getSubjects(subjectsAdded, getApplicationContext());
     }
 
     @Override
@@ -163,48 +149,8 @@ public class Subjects extends AppCompatActivity {
     private void loadSchedule() {
         CSVReader reader = new CSVReader();
         final List<TimeSubject> timeSubjects = reader.readCSV(getApplicationContext());
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
-                DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH.mm");
-                List<SectionTimeEntity> sectionTimeEntities = new ArrayList<>();
-                Long sectionId = -1L;
-
-                for (TimeSubject item: timeSubjects) {
-                    SubjectEntity subjectEntity = db.subjectDao().getByName(item.getName());
-                    if (subjectEntity != null) {
-                        switch (item.getType()) {
-                            case 1:
-                                sectionId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
-                                break;
-                            case 2:
-                                sectionId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
-                                break;
-                            case 3:
-                                sectionId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
-                                break;
-                        }
-                        // Si existe algun dato ya introducido no lo aniadimos
-                        List<SectionTimeEntity> data = db.sectionTimeDao().getBySectionId(sectionId);
-                        if (data.size() == 0) {
-                            for (int i = 0; i < item.getStartDate().size(); i++) {
-                                String date = item.getStartDate().get(i);
-                                String time = item.getStartTime().get(i);
-                                date += time;
-                                try {
-                                    Date resDate = formatter.parse(date);
-                                    db.sectionTimeDao().insert(new SectionTimeEntity(sectionId, resDate.getTime(), resDate.getTime()));
-                                } catch (ParseException e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        t.start();
+        SubjectRepository repository = new SubjectRepository();
+        repository.addDates(timeSubjects,getApplicationContext());
     }
 
     @Override
@@ -274,43 +220,8 @@ public class Subjects extends AppCompatActivity {
 
     private void saveInDB(final List<Subject> subjects) {
         if (subjectsAdded.size() > 0) {
-            final List<SubjectEntity>[] all = new List[]{new ArrayList<>()};
-            Thread t = new Thread() {
-                    public void run() {
-                        AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
-//                    db.subjectDao().insertSubjects(subjects, db);
-                        List<Long> teachersId = new ArrayList<>();
-                        Long officeId = 1L;
-                        for (Subject subject : subjects) {
-                            for (Teacher teacher : subject.getTeachers()) {
-                                Log.d("Teacher", teacher.toString());
-                                Office office = teacher.getOffice();
-                                if (office != null) {
-                                    officeId = db.officeDao().insert(new OfficeEntity(office.getBuilding(),
-                                            office.getFloor(), office.getDoor(), office.getCoordinates()));
-                                    Log.d("OfficeId", officeId.toString());
-                                    teachersId.add(db.teacherDao().insert(new TeacherEntity(teacher.getName(),
-                                            teacher.getEmail(), officeId)));
-                                }
-                            }
-                            try {
-                                Long subjectId = db.subjectDao().insert(new SubjectEntity(subject.getName(), 1L));
-                                db.theoryDao().insert(new TheoryEntity(subjectId));
-                                db.practiceDao().insert(new PracticeEntity(subjectId));
-                                db.seminaryDao().insert(new SeminaryEntity(subjectId));
-                                Log.d("SubjectId", subjectId.toString());
-                                for (Long teacherId : teachersId) {
-                                    db.teacherSubjectDao().insert(new TeacherSubjectEntity(teacherId, subjectId));
-                                }
-                                teachersId.clear();
-                            } catch (SQLiteConstraintException e) {
-                                Log.e("SQL_ERROR", "Unique field insert error.");
-                            }
-                        }
-                        all[0] = db.subjectDao().getAll();
-                    }
-            };
-            t.start();
+            SubjectRepository repository = new SubjectRepository();
+            repository.addSubjects(subjects,getApplicationContext());
         }
     }
 
