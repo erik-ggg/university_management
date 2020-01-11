@@ -105,8 +105,148 @@
         </subject>
     </year>
     <year number="3">
+        <subject name="Software y Dispositivos Móviles">
+            <teacher>
+                <name>Cristina Pelayo García-Bustelo</name>
+                <email>crispelayo@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Juan Manuel Cueva Lovelle</name>
+                <email>cueva@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+        </subject>
     </year>
     <year number="4">
+        <subject name="Sistemas Inteligentes">
+            <teacher>
+                <name>Juan Luis Mateo Cerdán</name>
+                <email>mateojuan@uniovi.es</email>
+                <office>
+                    <building>Facultad de Geología</building>
+                    <floor>7</floor>
+                    <door>7.1</door>
+                    <coordinates>43.3584105,-5.8563628,18</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Ramiro Varela Arias</name>
+                <email>ramiro@uniovi.es</email>
+                <office>
+                    <building>Edificio Departamental Oeste Gijón</building>
+                    <floor>1</floor>
+                    <door>1.1.29</door>
+                    <coordinates>43.5234385,-5.6305381,17</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Susana Irene Díaz Rodríguez</name>
+                <email>sirene@uniovi.es</email>
+                <office>
+                    <building>Facultad de Geología</building>
+                    <floor>4</floor>
+                    <door>4</door>
+                    <coordinates>43.3584105,-5.8563628,18</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Miguel Angel Gonzalez Fernandez</name>
+                <email>mig@uniovi.es</email>
+                <office>
+                    <building>Edificio Departamental Oeste Gijón</building>
+                    <floor>1</floor>
+                    <door>1.1.03</door>
+                    <coordinates>43.5234385,-5.6305381,17</coordinates>
+                </office>
+            </teacher>
+        </subject>
+        <subject name="Calidad, Validación y Verificación del Software">
+            <teacher>
+                <name>Pablo Javier Tuya González</name>
+                <email>tuya@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>María Jose Suarez Cabal</name>
+                <email>cabal@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Raquel Blanco Aguirre</name>
+                <email>rblanco@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+        </subject>
+        <subject name="Ingeniería de Requisitos">
+            <teacher>
+                <name>María Eugenia Díaz Fernández</name>
+                <email>madiaz@uniovi.es</email>
+                <office>
+                    <building>Edificio Departamental Oeste Gijón</building>
+                    <floor>1</floor>
+                    <door>1.1.21</door>
+                    <coordinates>43.5234385,-5.6305381,17</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Marta Fernández de Arriba</name>
+                <email>martafer@uniovi.es</email>
+                <office>
+                    <building>Edificio Departamental Oeste Gijón</building>
+                    <floor>1</floor>
+                    <door>1.1.33</door>
+                    <coordinates>43.5234385,-5.6305381,17</coordinates>
+                </office>
+            </teacher>
+        </subject>
+        <subject name="Software de Entretenimiento y Videojuegos">
+            <teacher>
+                <name>Jordán Pascual Espada</name>
+                <email>pascualjordan@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Irene Cid Rico</name>
+                <email>irenecr@educastur.org</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+        </subject>
         <subject name="Software y Dispositivos Móviles">
             <teacher>
                 <name>Mª del Puerto Paule Ruiz</name>

@@ -8,14 +8,18 @@ import java.lang.Exception
 
 class CSVReader() {
 
+    // Primero
     private val CALCULO = "Cal"
+    // Segundo
+    private val SO = "SO"
+    // Tercero
     private val SEW = "SEW"
-    private val CVVS = "CVVS"
-    private val IR = "IR"
+    // Cuarto y optativas
     private val SI = "SI"
+    private val IR = "IR"
+    private val CVVS = "CVVS"
     private val SEV = "SEV"
     private val SDM = "SDM"
-    private val SO = "SO"
 
     fun readCSV(context: Context): MutableList<TimeSubject> {
         val inputStream: InputStream = context.assets.open("plan.csv")
@@ -89,7 +93,7 @@ class CSVReader() {
             // TODO: Pasar a constantes
             CALCULO -> return "Calculo"
             SEW -> return "Software y Estándares para la Web"
-            CVVS -> return "Calidad Validación y Verificación"
+            CVVS -> return "Calidad, Validación y Verificación del Software"
             IR -> return "Ingeniería de Requisitos"
             SI -> return "Sistemas Inteligentes"
             SEV -> return "Software de Entretenimiento y Videojuegos"
