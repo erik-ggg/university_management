@@ -12,20 +12,24 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Date;
+import java.util.List;
+
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.classes.Absence;
+import es.uniovi.university_management.util.DateParser;
 
-public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder> {
+public class AbsencesAdapter extends RecyclerView.Adapter<AbsencesAdapter.MyViewHolder> {
 
-    private TimeSubject horario;
+    private List<Absence> listaAusencias;
     private Context context;
-    private Activity timeTableActivity;
+    private Activity absencesActivity;
 
 
-    public DatesAdapter(TimeSubject horario, Context context, Activity timeTableActivity) {
-        this.horario = horario;
+    public AbsencesAdapter(List<Absence> listaAusencias, Context context, Activity timeTableActivity) {
+        this.listaAusencias = listaAusencias;
         this.context = context;
-        this.timeTableActivity = timeTableActivity;
+        this.absencesActivity = timeTableActivity;
     }
 
 
@@ -39,11 +43,13 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        String dateString = horario.getStartDate().get(position);
-        String hoursString = horario.getStartTime().get(position);
-        holder.day.setText(dateString);
-        holder.hours.setText(hoursString);
+    public void onBindViewHolder(@NonNull AbsencesAdapter.MyViewHolder holder, int position) {
+        Absence absence = listaAusencias.get(position);
+        Date date = absence.getDate().getTime();
+        DateParser parser = new DateParser();
+        holder.fecha.setText(parser.dateToStringWithoutHour(date));
+        if (absence.isAutomatic())
+            holder.automatica.setText("Automática");
         holder.eliminar.setOnClickListener(view -> {
 
             confirmaBorrado(position);
@@ -53,18 +59,16 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
     }
 
 
-
     private void confirmaBorrado(int pos) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(timeTableActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(absencesActivity);
 
         builder.setTitle("Eliminar fecha")
                 .setMessage("La fecha se eliminará definitivamente del horario, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
 
-                            horario.getStartDate().remove(pos);
-                            horario.getStartTime().remove(pos);
-                            DatesAdapter.this.notifyDataSetChanged();
+                            listaAusencias.remove(pos);
+                            AbsencesAdapter.this.notifyDataSetChanged();
                             //TODO notificar cambios a la base de datos
                         })
                 .setNegativeButton("CANCELAR",
@@ -76,18 +80,18 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
 
     @Override
     public int getItemCount() {
-        return horario.getStartDate().size();
+        return listaAusencias.size();
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-        public TextView day;
-        public TextView hours;
+        public TextView fecha;
+        public TextView automatica;
         public ImageButton eliminar;
 
         public MyViewHolder(View view) {
             super(view);
-            day = view.findViewById(R.id.dayOfTheLesson);
-            hours = view.findViewById(R.id.hours);
+            fecha = view.findViewById(R.id.dayOfTheLesson);
+            automatica = view.findViewById(R.id.hours);
             eliminar = view.findViewById(R.id.botonEliminarFecha);
 
 
@@ -97,6 +101,4 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
     }
 
 }
-
-
 

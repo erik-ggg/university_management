@@ -1,5 +1,6 @@
 package es.uniovi.university_management.ui.adapters;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -22,15 +23,14 @@ import java.util.List;
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Teacher;
 import es.uniovi.university_management.ui.MapsActivity;
-import es.uniovi.university_management.ui.TeachersActivity;
 
 public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyViewHolder> {
 
     private List<Teacher> listaProfesores;
     private Context context;
-    private TeachersActivity teachersActivity;
+    private Activity teachersActivity;
 
-    public TeachersAdapter(List<Teacher> listaProfesores, Context context, TeachersActivity teachersActivity) {
+    public TeachersAdapter(List<Teacher> listaProfesores, Context context, Activity teachersActivity) {
         this.listaProfesores = listaProfesores;
         this.context = context;
         this.teachersActivity = teachersActivity;
@@ -101,7 +101,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyView
                         (dialog, which) -> {
 
                             listaProfesores.remove(pos);
-                            TeachersAdapter.this.notifyItemRemoved(pos);
+                            TeachersAdapter.this.notifyDataSetChanged();
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())
@@ -143,7 +143,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyView
             nombre = view.findViewById(R.id.nombre_profesor);
             email = view.findViewById(R.id.email_profesor);
             eliminar = view.findViewById(R.id.botonEliminarProfesor);
-            view.setOnClickListener(new View.OnClickListener() {
+            /*view.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent i = new Intent(Intent.ACTION_SEND);
@@ -159,7 +159,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyView
                     }
                 }
 
-            });
+            });*/
 
 
         }
