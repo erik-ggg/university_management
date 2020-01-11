@@ -44,5 +44,10 @@ public class DateParser {
         return df.format(d);
     }
 
+    public String dateToStringWithoutHour(Date d) {
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
+        return df.format(d);
+    }
+
 
 }
