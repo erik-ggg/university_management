@@ -21,6 +21,7 @@ import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.OfficeEntity;
 import es.uniovi.university_management.model.TeacherEntity;
 import es.uniovi.university_management.model.TeacherSubjectEntity;
+import es.uniovi.university_management.repositories.TeachersRepository;
 import es.uniovi.university_management.ui.adapters.TeachersAdapter;
 
 public class TeachersActivity extends AppCompatActivity {
@@ -53,25 +54,8 @@ public class TeachersActivity extends AppCompatActivity {
     }
 
     private void loadTeachers(String subjectName, List<Teacher> teachers) {
-        Thread t = new Thread() {
-            @Override
-            public void run() {
-                super.run();
-                AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
-                Integer subjectId = db.subjectDao().getByName(subjectName).getId();
-                List<TeacherSubjectEntity> teachersId = db.teacherSubjectDao().getBySubjectId(subjectId);
-                List<Teacher> teachersData = new ArrayList<>();
-                for (TeacherSubjectEntity teacher : teachersId) {
-                    TeacherEntity teacherEntity = db.teacherDao().getById(teacher.getTeacherId());
-                    OfficeEntity officeEntity = db.officeDao().getById(teacherEntity.getOfficeId());
-                    teachersData.add(new Teacher(teacherEntity.getName(), teacherEntity.getEmail(),
-                            new Office(officeEntity.getBuiding(), officeEntity.getFloor(), officeEntity.getDoor(),
-                                    officeEntity.getCoordinates())));
-                }
-                teachers.addAll(teachersData);
-            }
-        };
-        t.start();
+        TeachersRepository repository = new TeachersRepository();
+        repository.getTeachers(subjectName, teachers, getApplicationContext());
     }
 
     @Override
