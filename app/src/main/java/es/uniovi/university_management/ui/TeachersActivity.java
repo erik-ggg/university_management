@@ -12,10 +12,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.OfficeEntity;
+import es.uniovi.university_management.model.TeacherEntity;
+import es.uniovi.university_management.model.TeacherSubjectEntity;
 import es.uniovi.university_management.ui.adapters.TeachersAdapter;
 
 public class TeachersActivity extends AppCompatActivity {
@@ -30,11 +35,8 @@ public class TeachersActivity extends AppCompatActivity {
         Bundle param = this.getIntent().getExtras();
         String subjectName = param.getString("nombreAsignatura");
 
-        //harcodeando los profesores
-        ArrayList<Teacher> teachers = new ArrayList<Teacher>();
-        teachers.add(new Teacher("Pepe", "profesor1@uniovi.es", new Office("a", 2, "b", "43.3548096,-5.8534646")));
-        teachers.add(new Teacher("Juan", "profesor2@uniovi.es", new Office("c", 3, "d", "43.3552562,-5.8530462")));
-        //fin hardcoding
+        List<Teacher> teachers = new ArrayList<>();
+        loadTeachers(subjectName, teachers);
 
         RecyclerView listaProfesoresView = (RecyclerView) findViewById(R.id.lista_profesores);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
@@ -48,6 +50,28 @@ public class TeachersActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Profesores de " + subjectName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+    private void loadTeachers(String subjectName, List<Teacher> teachers) {
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
+                Integer subjectId = db.subjectDao().getByName(subjectName).getId();
+                List<TeacherSubjectEntity> teachersId = db.teacherSubjectDao().getBySubjectId(subjectId);
+                List<Teacher> teachersData = new ArrayList<>();
+                for (TeacherSubjectEntity teacher : teachersId) {
+                    TeacherEntity teacherEntity = db.teacherDao().getById(teacher.getTeacherId());
+                    OfficeEntity officeEntity = db.officeDao().getById(teacherEntity.getOfficeId());
+                    teachersData.add(new Teacher(teacherEntity.getName(), teacherEntity.getEmail(),
+                            new Office(officeEntity.getBuiding(), officeEntity.getFloor(), officeEntity.getDoor(),
+                                    officeEntity.getCoordinates())));
+                }
+                teachers.addAll(teachersData);
+            }
+        };
+        t.start();
     }
 
     @Override

@@ -19,9 +19,7 @@ class CSVReader() {
 
     fun readCSV(context: Context): MutableList<TimeSubject> {
         val inputStream: InputStream = context.assets.open("plan.csv")
-//        val fileReader = BufferedReader(FileReader(File("E:\\University\\4\\SDM\\university_management\\app\\src\\test\\java\\es\\uniovi\\university_management\\plan.csv")))
         val fileReader = BufferedReader(InputStreamReader(inputStream))
-//        val fileReader = BufferedReader(context.assets.open("plan.csv").bufferedReader())
         var subjectsCalendar = mutableListOf<TimeSubject>()
         var currentSubject = ""
         var currentType = -1

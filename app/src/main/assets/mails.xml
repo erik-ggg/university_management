@@ -17,16 +17,84 @@
                 <email>Profesor2@mail.com</email>
             </teacher>
         </subject>
-        <subject name="Metodología de la Programación">
-        </subject>
         <subject name="Calculo">
+            <teacher>
+                <name>Manuel José Fernández Gutiérrez</name>
+                <email>mjfg@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Francisco Argüeso Gómez</name>
+                <email>argueso@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Fernando Sánchez Lasheras</name>
+                <email>sanchezfernando@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name> Ana María San Luis Fernández</name>
+                <email>sanluis@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
         </subject>
     </year>
     <year number="2">
         <subject name="Sistemas Operativos">
             <teacher>
-                <name>Profesor1</name>
-                <email>Profesor1@mail.com</email>
+                <name>Néstor García Fernández</name>
+                <email>nestor@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Miguel Riesco Albizu</name>
+                <email>albizu@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Miguel Angel Alonso González</name>
+                <email>alonsomiguel@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Oscar Cosido Cobos</name>
+                <email>oscar.cosido@uniovi.es</email>
                 <office>
                     <building>Facultad de Ciencas</building>
                     <floor>1</floor>
@@ -39,5 +107,27 @@
     <year number="3">
     </year>
     <year number="4">
+        <subject name="Software y Dispositivos Móviles">
+            <teacher>
+                <name>Mª del Puerto Paule Ruiz</name>
+                <email>paule@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+            <teacher>
+                <name>Juan Ramón Pérez Pérez</name>
+                <email>jrpp@uniovi.es</email>
+                <office>
+                    <building>Facultad de Ciencas</building>
+                    <floor>1</floor>
+                    <door>111</door>
+                    <coordinates>43.3577599,-5.8558198</coordinates>
+                </office>
+            </teacher>
+        </subject>
     </year>
 </university>

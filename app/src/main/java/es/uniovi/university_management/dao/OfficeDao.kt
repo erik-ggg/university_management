@@ -4,12 +4,16 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import es.uniovi.university_management.classes.Office
 import es.uniovi.university_management.model.OfficeEntity
 
 @Dao
 interface OfficeDao {
     @Query("SELECT * FROM officeentity")
     fun getAll(): List<OfficeEntity>
+
+    @Query("SELECT * FROM officeentity WHERE id = :id")
+    fun getById(id: Long): OfficeEntity
 
     @Insert
     fun insert(office: OfficeEntity): Long
