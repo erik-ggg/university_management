@@ -1,10 +1,10 @@
 package es.uniovi.university_management.model
 
 import androidx.room.Entity
-import androidx.room.Ignore
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity( indices = arrayOf(Index(value = ["name"], unique = true)))
 data class SubjectEntity(
     val name: String,
     val yearId: Long

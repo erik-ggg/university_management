@@ -5,6 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -250,8 +251,17 @@ public class Subjects extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         for (int i = 0; i < subjectsToAdd.size(); i++) {
-                            if (checkedItems[i])
-                                subjectsAdded.add(subjectsToAdd.get(i));
+                            Subject subject = subjectsToAdd.get(i);
+                            boolean isIn = false;
+                            if (checkedItems[i]) {
+                                for (Subject item: subjectsAdded) {
+                                    if (subject.getName().equals(item.getName()))
+                                        isIn = true;
+                                }
+                                if (!isIn)
+                                    subjectsAdded.add(subject);
+                            }
+
                         }
                         mAdapter.notifyDataSetChanged();
                         saveInDB(subjectsAdded);
@@ -283,15 +293,19 @@ public class Subjects extends AppCompatActivity {
                                             teacher.getEmail(), officeId)));
                                 }
                             }
-                            Long subjectId = db.subjectDao().insert(new SubjectEntity(subject.getName(), 1L));
-                            db.theoryDao().insert(new TheoryEntity(subjectId));
-                            db.practiceDao().insert(new PracticeEntity(subjectId));
-                            db.seminaryDao().insert(new SeminaryEntity(subjectId));
-                            Log.d("SubjectId", subjectId.toString());
-                            for (Long teacherId : teachersId) {
-                                db.teacherSubjectDao().insert(new TeacherSubjectEntity(teacherId, subjectId));
+                            try {
+                                Long subjectId = db.subjectDao().insert(new SubjectEntity(subject.getName(), 1L));
+                                db.theoryDao().insert(new TheoryEntity(subjectId));
+                                db.practiceDao().insert(new PracticeEntity(subjectId));
+                                db.seminaryDao().insert(new SeminaryEntity(subjectId));
+                                Log.d("SubjectId", subjectId.toString());
+                                for (Long teacherId : teachersId) {
+                                    db.teacherSubjectDao().insert(new TeacherSubjectEntity(teacherId, subjectId));
+                                }
+                                teachersId.clear();
+                            } catch (SQLiteConstraintException e) {
+                                Log.e("SQL_ERROR", "Unique field insert error.");
                             }
-                            teachersId.clear();
                         }
                         all[0] = db.subjectDao().getAll();
                     }
