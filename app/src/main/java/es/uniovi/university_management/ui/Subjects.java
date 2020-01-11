@@ -168,31 +168,35 @@ public class Subjects extends AppCompatActivity {
                 AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
                 DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH.mm");
                 List<SectionTimeEntity> sectionTimeEntities = new ArrayList<>();
-                Long targetId = -1L;
+                Long sectionId = -1L;
 
                 for (TimeSubject item: timeSubjects) {
                     SubjectEntity subjectEntity = db.subjectDao().getByName(item.getName());
                     if (subjectEntity != null) {
                         switch (item.getType()) {
                             case 1:
-                                targetId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
+                                sectionId = db.theoryDao().getBySubjectId(subjectEntity.getId()).getId();
                                 break;
                             case 2:
-                                targetId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
+                                sectionId = db.practiceDao().getBySubjectId(subjectEntity.getId()).getId();
                                 break;
                             case 3:
-                                targetId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
+                                sectionId = db.seminaryDao().getBySubjectId(subjectEntity.getId()).getId();
                                 break;
                         }
-                        for (int i = 0; i < item.getStartDate().size(); i++) {
-                            String date = item.getStartDate().get(i);
-                            String time = item.getStartTime().get(i);
-                            date += time;
-                            try {
-                                Date resDate = formatter.parse(date);
-                                db.sectionTimeDao().insert(new SectionTimeEntity(targetId, resDate.getTime(), resDate.getTime()));
-                            } catch (ParseException e) {
-                                e.printStackTrace();
+                        // Si existe algun dato ya introducido no lo aniadimos
+                        List<SectionTimeEntity> data = db.sectionTimeDao().getBySectionId(sectionId);
+                        if (data.size() == 0) {
+                            for (int i = 0; i < item.getStartDate().size(); i++) {
+                                String date = item.getStartDate().get(i);
+                                String time = item.getStartTime().get(i);
+                                date += time;
+                                try {
+                                    Date resDate = formatter.parse(date);
+                                    db.sectionTimeDao().insert(new SectionTimeEntity(sectionId, resDate.getTime(), resDate.getTime()));
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
                             }
                         }
                     }
