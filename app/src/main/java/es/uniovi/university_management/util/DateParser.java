@@ -16,7 +16,7 @@ public class DateParser {
         return formatter.format(aux);
     }
 
-    public Date stringToDate(String date, String time) {
+    public static Date stringToDate(String date, String time) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
         Date fechaHorario = null;
         String temporal = "";

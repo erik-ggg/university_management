@@ -71,4 +71,34 @@ class SectionTimeRepository {
     fun getSeminaryDates(seminaryId: Long, context: Context) {
 
     }
+
+    fun addSectionTime(subjectName: String, sectionSelected: Int, startDate: Long, endDate: Long, context: Context) {
+        val t: Thread = object : Thread() {
+            override fun run() {
+                val db = AppDatabase.getAppDatabase(context)
+                val subjectId = db?.subjectDao()?.getByName(subjectName)?.id?.toLong()
+                if (subjectId == null || subjectId <= 0)
+                    throw RuntimeException("Can't find the specified subject")
+                db.sectionTimeDao().insert(SectionTimeEntity(subjectId, sectionSelected, startDate, endDate))
+            }
+        }
+        t.start()
+    }
+
+    fun delete(subjectName: String, type: Int, date: Long, context: Context) {
+        val t: Thread = object : Thread() {
+            override fun run() {
+                val db = AppDatabase.getAppDatabase(context)
+                val subjectId = db?.subjectDao()?.getByName(subjectName)?.id!!.toLong()
+                if (subjectId == null || subjectId <= 0)
+                    throw RuntimeException("Can't find the specified subject")
+                val sectionTimeEntity = db.sectionTimeDao().getBySectionIdAndTypeAndDate(subjectId, type, date)
+                if (sectionTimeEntity.isEmpty())
+                    throw RuntimeException("SectionTime not found")
+                else
+                db.sectionTimeDao().delete(sectionTimeEntity[0])
+            }
+        }
+        t.start()
+    }
 }

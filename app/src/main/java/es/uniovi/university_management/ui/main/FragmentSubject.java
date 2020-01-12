@@ -51,6 +51,10 @@ public class FragmentSubject extends Fragment {
     private SubjectAdapter adapterPracticas;
     private SubjectAdapter adapterSeminario;
 
+    final List<Date> theoryDate = new ArrayList<>();
+    final List<Date> practiceDate = new ArrayList<>();
+    final List<Date> seminaryDate = new ArrayList<>();
+
     private final AppDatabase[] db = new AppDatabase[1];
     private final Long[] subjectId = new Long[1];
     private final Long[] theoryId = new Long[1];
@@ -109,13 +113,6 @@ public class FragmentSubject extends Fragment {
             }
         });
 
-
-        final List<Date> theoryDate = new ArrayList<>();
-        final List<Date> practiceDate = new ArrayList<>();
-        final List<Date> seminaryDate = new ArrayList<>();
-
-
-
         // Carga desde base de datos
         Thread t1 = new Thread() {
             @Override
@@ -170,22 +167,6 @@ public class FragmentSubject extends Fragment {
                     }
                 }
 
-               /* List<TestEntity> practiseTest = db[0].testDao().getBySectionId(practiceId[0]);
-                for (TestEntity item : practiseTest) {
-                    name = item.getName();
-                    mark = item.getMark();
-                    if (!isTestInList(name, notasPractica))
-                        notasPractica.add(new Test(name, 2, mark));
-                }
-
-                List<TestEntity> seminaryTest = db[0].testDao().getBySectionId(seminaryId[0]);
-                for (TestEntity item : seminaryTest) {
-                    name = item.getName();
-                    mark = item.getMark();
-                    if (!isTestInList(name, notasSeminario))
-                        notasSeminario.add(new Test(name, 3, mark));
-                }*/
-
                 TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
                 switch (section) {
                     case 0:
@@ -197,12 +178,10 @@ public class FragmentSubject extends Fragment {
                     case 2:
                         nextLesson.setText(getNextLesson(seminaryDate));
                         break;
-
                 }
             }
         };
         t1.start();
-
 
         //harcodeando las notas
         //notasTeoria = new ArrayList<Test>();
@@ -238,8 +217,6 @@ public class FragmentSubject extends Fragment {
 
         return rootView;
     }
-
-
 
     private boolean createIntent(Class c) {
         Intent i = new Intent(getActivity(), c);

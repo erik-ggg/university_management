@@ -12,20 +12,28 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.Date;
+
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.repositories.SectionTimeRepository;
+import es.uniovi.university_management.util.DateParser;
 
 public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder> {
 
     private TimeSubject horario;
     private Context context;
     private Activity timeTableActivity;
+    private String subjectName;
+    private int type;
 
 
-    public DatesAdapter(TimeSubject horario, Context context, Activity timeTableActivity) {
+    public DatesAdapter(String subjectName, int type, TimeSubject horario, Context context, Activity timeTableActivity) {
         this.horario = horario;
         this.context = context;
         this.timeTableActivity = timeTableActivity;
+        this.subjectName = subjectName;
+        this.type = type;
     }
 
 
@@ -44,12 +52,7 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
         String hoursString = horario.getStartTime().get(position);
         holder.day.setText(dateString);
         holder.hours.setText(hoursString);
-        holder.eliminar.setOnClickListener(view -> {
-
-            confirmaBorrado(position);
-        });
-
-
+        holder.eliminar.setOnClickListener(view -> confirmaBorrado(position));
     }
 
 
@@ -61,16 +64,18 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
                 .setMessage("La fecha se eliminará definitivamente del horario, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
+                            // si se elimina en bd entonces se elimina aqui. Deberia ser asi
+                            Date date = DateParser.stringToDate(horario.getStartDate().get(pos), horario.getStartTime().get(pos));
+                            SectionTimeRepository repository = new SectionTimeRepository();
+                            repository.delete(subjectName, type, date.getTime(), context);
 
                             horario.getStartDate().remove(pos);
                             horario.getStartTime().remove(pos);
                             DatesAdapter.this.notifyDataSetChanged();
-                            //TODO notificar cambios a la base de datos
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())
                 .show();
-
     }
 
 
@@ -89,13 +94,8 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
             day = view.findViewById(R.id.dayOfTheLesson);
             hours = view.findViewById(R.id.hours);
             eliminar = view.findViewById(R.id.botonEliminarFecha);
-
-
         }
-
-
     }
-
 }
 
 

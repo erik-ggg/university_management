@@ -14,6 +14,9 @@ interface SectionTimeDao {
     @Query("SELECT * FROM sectiontimeentity WHERE sectionId = :id AND sectionType = :type")
     fun getBySectionIdAndType(id: Long, type: Int): List<SectionTimeEntity>
 
+    @Query("SELECT * FROM sectiontimeentity WHERE sectionId = :id AND sectionType = :type AND startDate = :date")
+    fun getBySectionIdAndTypeAndDate(id: Long, type: Int, date: Long): List<SectionTimeEntity>
+
     @Insert
     fun insert(section: SectionTimeEntity): Long
 

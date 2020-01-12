@@ -22,12 +22,14 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
 import es.uniovi.university_management.repositories.SectionTimeRepository;
 import es.uniovi.university_management.ui.adapters.DatesAdapter;
 import es.uniovi.university_management.ui.dialog.DatePickerFragment;
+import es.uniovi.university_management.util.DateParser;
 
 public class TimeTableActivity extends AppCompatActivity {
 
@@ -42,6 +44,7 @@ public class TimeTableActivity extends AppCompatActivity {
     private DatesAdapter adapterTeoria;
     private DatesAdapter adapterPractica;
     private DatesAdapter adapterSeminario;
+    String subjectName;
 
 
     @Override
@@ -52,7 +55,7 @@ public class TimeTableActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle param = this.getIntent().getExtras();
-        String subjectName = param.getString("nombreAsignatura");
+        subjectName = param.getString("nombreAsignatura");
 
         RecyclerView listaTeoriaView = findViewById(R.id.recycler_dates_theory);
         RecyclerView listaPracticaView = findViewById(R.id.recycler_dates_practic);
@@ -73,9 +76,9 @@ public class TimeTableActivity extends AppCompatActivity {
         repository.getAllBySubjectName(subjectName, horarioTeoria, horarioPracticas, horarioSeminarios,
                 getApplicationContext());
 
-        adapterTeoria = new DatesAdapter(horarioTeoria, getApplicationContext(), TimeTableActivity.this);
-        adapterPractica = new DatesAdapter(horarioPracticas, getApplicationContext(), TimeTableActivity.this);
-        adapterSeminario = new DatesAdapter(horarioSeminarios, getApplicationContext(), TimeTableActivity.this);
+        adapterTeoria = new DatesAdapter(subjectName, 1, horarioTeoria, getApplicationContext(), TimeTableActivity.this);
+        adapterPractica = new DatesAdapter(subjectName, 2, horarioPracticas, getApplicationContext(), TimeTableActivity.this);
+        adapterSeminario = new DatesAdapter(subjectName, 3, horarioSeminarios, getApplicationContext(), TimeTableActivity.this);
 
         listaTeoriaView.setAdapter(adapterTeoria);
         listaPracticaView.setAdapter(adapterPractica);
@@ -165,8 +168,11 @@ public class TimeTableActivity extends AppCompatActivity {
     }
 
     private void saveDate(int sectionSelected, String newDate, String newHour) {
+        Date date = DateParser.stringToDate(newDate, newHour);
+        SectionTimeRepository repository = new SectionTimeRepository();
+        repository.addSectionTime(subjectName, sectionSelected, date.getTime(), date.getTime(), getApplicationContext());
+
         switch (sectionSelected) {
-            //TODO guardar en la base de datos
             case 1:
                 horarioTeoria.getStartDate().add(newDate);
                 horarioTeoria.getStartTime().add(newHour);
@@ -194,5 +200,4 @@ public class TimeTableActivity extends AppCompatActivity {
         recycler.setItemAnimator(new DefaultItemAnimator());
         recycler.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
     }
-
 }
