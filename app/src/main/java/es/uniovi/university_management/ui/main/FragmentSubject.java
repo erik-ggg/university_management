@@ -151,14 +151,26 @@ public class FragmentSubject extends Fragment {
                 List<TestEntity> theoryTest = db[0].testDao().getBySectionId(theoryId[0]);
                 String name;
                 Double mark;
+                int type;
                 for (TestEntity item : theoryTest) {
                     name = item.getName();
                     mark = item.getMark();
-                    if (!isTestInList(name, notasTeoria))
-                        notasTeoria.add(new Test(name, 1, mark));
+                    type = item.getType();
+                    if (type == 1) {
+                        if (!isTestInList(name, notasTeoria))
+                            notasTeoria.add(new Test(name, 1, mark));
+                    }
+                    if (type == 2) {
+                        if (!isTestInList(name, notasPractica))
+                            notasPractica.add(new Test(name, 2, mark));
+                    }
+                    if (type == 3) {
+                        if (!isTestInList(name, notasSeminario))
+                            notasSeminario.add(new Test(name, 3, mark));
+                    }
                 }
 
-                List<TestEntity> practiseTest = db[0].testDao().getBySectionId(practiceId[0]);
+               /* List<TestEntity> practiseTest = db[0].testDao().getBySectionId(practiceId[0]);
                 for (TestEntity item : practiseTest) {
                     name = item.getName();
                     mark = item.getMark();
@@ -172,7 +184,7 @@ public class FragmentSubject extends Fragment {
                     mark = item.getMark();
                     if (!isTestInList(name, notasSeminario))
                         notasSeminario.add(new Test(name, 3, mark));
-                }
+                }*/
 
                 TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
                 switch (section) {
@@ -224,44 +236,9 @@ public class FragmentSubject extends Fragment {
         }
 
 
-        //harcodeando los horarios
-
-//        ArrayList startDates1 = new ArrayList<>();
-//        startDates1.add("07/01/2020");
-//        startDates1.add("10/01/2020");
-//        startDates1.add("14/01/2020");
-//        startDates1.add("17/01/2020");
-//        ArrayList startTimes1 = new ArrayList<>();
-//        startTimes1.add("9.00");
-//        startTimes1.add("10.00");
-//        startTimes1.add("9.00");
-//        startTimes1.add("10.00");
-//        ArrayList startDates2 = new ArrayList<>();
-//        startDates2.add("08/01/2020");
-//        startDates2.add("11/01/2020");
-//        startDates2.add("15/01/2020");
-//        startDates2.add("18/01/2020");
-//        ArrayList startTimes2 = new ArrayList<>();
-//        startTimes2.add("9.00");
-//        startTimes2.add("10.00");
-//        startTimes2.add("9.00");
-//        startTimes2.add("10.00");
-//        ArrayList startDates3 = new ArrayList<>();
-//        startDates3.add("08/11/2019");
-//        startDates3.add("11/11/2019");
-//        startDates3.add("15/11/2019");
-//        startDates3.add("18/11/2019");
-//        ArrayList startTimes3 = new ArrayList<>();
-//        startTimes3.add("14.00");
-//        startTimes3.add("15.00");
-//        startTimes3.add("14.00");
-//        startTimes3.add("15.00");
-//        TimeSubject horarioTeoria = new TimeSubject("Asignatura", 1, theorySectionsTime.get, startTimes1);
-//        TimeSubject horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
-//        TimeSubject horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
-        //fin hardcoding
         return rootView;
     }
+
 
 
     private boolean createIntent(Class c) {
@@ -349,42 +326,41 @@ public class FragmentSubject extends Fragment {
 
         switch (sectionSelected) {
             case 1:
+                notasTeoria.add(new Test(testDescription, 1, d));
+                adapterTeoria.notifyDataSetChanged();
                 Thread t1 = new Thread() {
                     public void run() {
-
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
-                        db.testDao().insert(new TestEntity(theoryId[0], testDescription, d));
-                        notasTeoria.add(new Test(testDescription, 1, d));
+                        db.testDao().insert(new TestEntity(theoryId[0], testDescription, d, 1));
                     }
                 };
                 t1.start();
-                adapterTeoria.notifyDataSetChanged();
                 break;
 
             case 2:
+                notasPractica.add(new Test(testDescription, 2, d));
+                adapterPracticas.notifyDataSetChanged();
                 Thread t2 = new Thread() {
                     public void run() {
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
-                        db.testDao().insert(new TestEntity(practiceId[0], testDescription, d));
-                        notasPractica.add(new Test(testDescription, 2, d));
-                    }
+                        db.testDao().insert(new TestEntity(practiceId[0], testDescription, d, 2));
 
+                    }
                 };
                 t2.start();
-                adapterPracticas.notifyDataSetChanged();
                 break;
 
             case 3:
+                notasSeminario.add(new Test(testDescription, 3, d));
+                adapterSeminario.notifyDataSetChanged();
                 Thread t3 = new Thread() {
                     public void run() {
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
-                        db.testDao().insert(new TestEntity(seminaryId[0], testDescription, d));
-                        notasSeminario.add(new Test(testDescription, 3, d));
-                    }
+                        db.testDao().insert(new TestEntity(seminaryId[0], testDescription, d, 3));
 
+                    }
                 };
                 t3.start();
-                adapterSeminario.notifyDataSetChanged();
                 break;
             default:
                 //assume you only have 3
