@@ -73,6 +73,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
+
         return listaNotas.size();
     }
 

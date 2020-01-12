@@ -1,11 +1,20 @@
 package es.uniovi.university_management.ui.main;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -22,12 +31,31 @@ import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Test;
 import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.SectionTimeEntity;
+import es.uniovi.university_management.model.TestEntity;
+import es.uniovi.university_management.ui.AbsencesActivity;
+import es.uniovi.university_management.ui.TeachersActivity;
+import es.uniovi.university_management.ui.TimeTableActivity;
 import es.uniovi.university_management.ui.adapters.SubjectAdapter;
 
 public class FragmentSubject extends Fragment {
 
     private int section;
     private String subjectName;
+    private String testDescription = "";
+    private String testMark = "";
+    private int sectionSelected;
+    private ArrayList<Test> notasTeoria;
+    private ArrayList<Test> notasPractica;
+    private ArrayList<Test> notasSeminario;
+    private SubjectAdapter adapterTeoria;
+    private SubjectAdapter adapterPracticas;
+    private SubjectAdapter adapterSeminario;
+
+    final AppDatabase[] db = new AppDatabase[1];
+    final Long[] subjectId = new Long[1];
+    final Long[] theoryId = new Long[1];
+    final Long[] practiceId = new Long[1];
+    final Long[] seminaryId = new Long[1];
 
     public static FragmentSubject newInstance(int sectionNumber, String subject) {
         FragmentSubject fragment = new FragmentSubject();
@@ -37,6 +65,9 @@ public class FragmentSubject extends Fragment {
     }
 
     public FragmentSubject() {
+        notasTeoria = new ArrayList<Test>();
+        notasPractica = new ArrayList<Test>();
+        notasSeminario = new ArrayList<Test>();
     }
 
     @Override
@@ -48,15 +79,44 @@ public class FragmentSubject extends Fragment {
 
         recyclerNotas.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-        final AppDatabase[] db = new AppDatabase[1];
-        final Long[] subjectId = new Long[1];
-        final Long[] theoryId = new Long[1];
-        final Long[] practiceId = new Long[1];
-        final Long[] seminaryId = new Long[1];
+        setHasOptionsMenu(true);
+        //getActivity().invalidateOptionsMenu();
+        Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar_subject);
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Log.i("menu añadir nota", "he pasado por aquí");
+                int id = item.getItemId();
+                if (id == R.id.add_note) {
+                    showSectionDialog();
+                    return false;
+                }
+
+                if (id == R.id.contact_teachers) {
+                    return createIntent(TeachersActivity.class);
+                }
+
+                if (id == R.id.absence_control) {
+                    return createIntent(AbsencesActivity.class);
+                }
+
+                if (id == R.id.manage_timetable) {
+                    return createIntent(TimeTableActivity.class);
+                }
+
+
+                return true;
+            }
+        });
+
 
         final List<Date> theoryDate = new ArrayList<>();
         final List<Date> practiceDate = new ArrayList<>();
         final List<Date> seminaryDate = new ArrayList<>();
+
+        List<Test> notasTeoria = new ArrayList<>();
+        List<Test> notasPractica = new ArrayList<>();
+        List<Test> notasSeminario = new ArrayList<>();
 
 
         // Carga desde base de datos
@@ -91,6 +151,29 @@ public class FragmentSubject extends Fragment {
                     seminaryDate.add(date);
                 }
 
+                List<TestEntity> theoryTest = db[0].testDao().getBySectionId(theoryId[0]);
+                String name;
+                Double mark;
+                for (TestEntity item : theoryTest) {
+                    name = item.getName();
+                    mark = item.getMark();
+                    notasTeoria.add(new Test(name, 1, mark));
+                }
+
+                List<TestEntity> practiseTest = db[0].testDao().getBySectionId(practiceId[0]);
+                for (TestEntity item : practiseTest) {
+                    name = item.getName();
+                    mark = item.getMark();
+                    notasPractica.add(new Test(name, 2, mark));
+                }
+
+                List<TestEntity> seminaryTest = db[0].testDao().getBySectionId(practiceId[0]);
+                for (TestEntity item : seminaryTest) {
+                    name = item.getName();
+                    mark = item.getMark();
+                    notasSeminario.add(new Test(name, 3, mark));
+                }
+
                 TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
                 switch (section) {
                     case 0:
@@ -110,9 +193,11 @@ public class FragmentSubject extends Fragment {
 
 
         //harcodeando las notas
-        ArrayList<Test> notas = new ArrayList<Test>();
-        notas.add(new Test("examen 1", 5.2));
-        notas.add(new Test("examen 2", 8.7));
+        //notasTeoria = new ArrayList<Test>();
+        //notasPractica = new ArrayList<Test>();
+        //notasSeminario = new ArrayList<Test>();
+        //notasTeoria.add(new Test("examen 1",1, 5.2));
+        //notasPractica.add(new Test("examen 2", 2,8.7));
         //fin hardcoding
 
         RecyclerView listaNotasView = (RecyclerView) rootView.findViewById(R.id.notasRecycler);
@@ -122,8 +207,22 @@ public class FragmentSubject extends Fragment {
         listaNotasView.addItemDecoration(new DividerItemDecoration(rootView.getContext(), LinearLayoutManager.VERTICAL));
 
 
-        SubjectAdapter mAdapter = new SubjectAdapter(notas, rootView.getContext());
-        listaNotasView.setAdapter(mAdapter);
+        adapterTeoria = new SubjectAdapter(this.notasTeoria, rootView.getContext());
+        adapterPracticas = new SubjectAdapter(this.notasPractica, rootView.getContext());
+        adapterSeminario = new SubjectAdapter(this.notasSeminario, rootView.getContext());
+        switch (section) {
+            case 0:
+                listaNotasView.setAdapter(adapterTeoria);
+                break;
+            case 1:
+                listaNotasView.setAdapter(adapterPracticas);
+                break;
+            case 2:
+                listaNotasView.setAdapter(adapterSeminario);
+                break;
+
+        }
+
 
         //harcodeando los horarios
 
@@ -164,6 +263,15 @@ public class FragmentSubject extends Fragment {
         return rootView;
     }
 
+
+    private boolean createIntent(Class c) {
+        Intent i = new Intent(getActivity(), c);
+        i.putExtra("nombreAsignatura", subjectName);
+        startActivity(i);
+        return true;
+
+    }
+
     private String getNextLesson(List<Date> dates) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
         Date fechaActual = new Date();
@@ -176,6 +284,110 @@ public class FragmentSubject extends Fragment {
         }
         return "Clases finalizadas.";
     }
+
+
+    private void showSectionDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+        final CharSequence[] items = new CharSequence[3];
+
+        items[0] = "Teoría";
+        items[1] = "Prácticas";
+        items[2] = "Seminario";
+
+        builder.setTitle("Elija la sección")
+                .setItems(items, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        sectionSelected = which + 1;
+                        Log.i("Selección de sección", "seleccionado " + items[which]);
+                        showInputTextDialog();
+                    }
+                })
+                .show();
+    }
+
+    private void showInputTextDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Descripción del Examen");
+
+        LinearLayout layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        // Set up the inputs
+        final EditText input1 = new EditText(getActivity());
+        input1.setHint("Descripción del Test");
+        input1.setInputType(InputType.TYPE_CLASS_TEXT);
+        layout.addView(input1);
+        final EditText input2 = new EditText(getActivity());
+        input2.setHint("Nota");
+        layout.addView(input2);
+
+        builder.setView(layout);
+        // Set up the buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                testDescription = input1.getText().toString();
+                testMark = input2.getText().toString();
+                saveTest(sectionSelected, testDescription, testMark);
+
+            }
+        });
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+    }
+
+    private void saveTest(int sectionSelected, String testDescription, String testMark) {
+        Double d = Double.parseDouble(testMark);
+
+
+        switch (sectionSelected) {
+            case 1:
+                Thread t1 = new Thread() {
+                    public void run() {
+                        AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
+                        db.testDao().insert(new TestEntity(theoryId[0], testDescription, d));
+                    }
+
+                };
+                t1.start();
+                adapterTeoria.notifyDataSetChanged();
+                break;
+            case 2:
+                Thread t2 = new Thread() {
+                    public void run() {
+                        AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
+                        db.testDao().insert(new TestEntity(practiceId[0], testDescription, d));
+                    }
+
+                };
+                t2.start();
+                adapterPracticas.notifyDataSetChanged();
+                break;
+            case 3:
+                Thread t3 = new Thread() {
+                    public void run() {
+                        AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
+                        db.testDao().insert(new TestEntity(seminaryId[0], testDescription, d));
+                    }
+
+                };
+                t3.start();
+                adapterSeminario.notifyDataSetChanged();
+                break;
+            default:
+                //assume you only have 3
+                throw new IllegalArgumentException();
+        }
+    }
+
+}
 
 //    private String getNextLesson(TimeSubject horario) {
 //        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
@@ -202,4 +414,4 @@ public class FragmentSubject extends Fragment {
 //
 //        return ("No hay más clases para esta asignatura");
 //    }
-}
+

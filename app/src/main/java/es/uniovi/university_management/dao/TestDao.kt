@@ -11,6 +11,9 @@ interface TestDao {
     @Query("SELECT * FROM testentity")
     fun getAll(): List<TestEntity>
 
+    @Query("SELECT * FROM testentity WHERE sectionId = :id")
+    fun getBySectionId(id: Long): List<TestEntity>
+
     @Insert
     fun insert(test: TestEntity): Long
 
