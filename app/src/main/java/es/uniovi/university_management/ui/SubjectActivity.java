@@ -18,6 +18,7 @@ public class SubjectActivity extends AppCompatActivity {
 
     private String subjectName;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,8 +65,10 @@ public class SubjectActivity extends AppCompatActivity {
             return createIntent(TimeTableActivity.class);
         }
 
+
         return super.onOptionsItemSelected(item);
     }
+
 
     private boolean createIntent(Class c) {
         Intent i = new Intent(this, c);
