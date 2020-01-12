@@ -5,7 +5,6 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteConstraintException;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,28 +16,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Subject;
-import es.uniovi.university_management.classes.Teacher;
 import es.uniovi.university_management.classes.TimeSubject;
 import es.uniovi.university_management.classes.Year;
-import es.uniovi.university_management.database.AppDatabase;
-import es.uniovi.university_management.model.OfficeEntity;
-import es.uniovi.university_management.model.PracticeEntity;
-import es.uniovi.university_management.model.SectionTimeEntity;
-import es.uniovi.university_management.model.SeminaryEntity;
-import es.uniovi.university_management.model.SubjectEntity;
-import es.uniovi.university_management.model.TeacherEntity;
-import es.uniovi.university_management.model.TeacherSubjectEntity;
-import es.uniovi.university_management.model.TheoryEntity;
 import es.uniovi.university_management.parser.CSVReader;
 import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.repositories.SubjectRepository;
@@ -50,8 +34,7 @@ public class Subjects extends AppCompatActivity {
     private ArrayList<Subject> subjectsToAdd;
     SubjectsAdapter mAdapter;
     private SearchView searchView;
-    //esto es para poder crear asignaturas
-    ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +59,6 @@ public class Subjects extends AppCompatActivity {
         listaAsignaturasView.setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //getSavedSubjects();
-    }
 
     private void getSavedSubjects() {
         SubjectRepository repository = new SubjectRepository();

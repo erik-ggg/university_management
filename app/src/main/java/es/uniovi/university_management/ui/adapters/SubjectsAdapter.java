@@ -50,7 +50,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Subject asignatura = listaAsignaturas.get(position);
+        Subject asignatura = listaAsignaturasFiltered.get(position);
         holder.titulo.setText(asignatura.getName());
         holder.eliminar.setOnClickListener(view -> {
 
@@ -63,7 +63,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
 
     @Override
     public int getItemCount() {
-        return listaAsignaturas.size();
+        return listaAsignaturasFiltered.size();
     }
 
     @Override
@@ -129,18 +129,23 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
         AlertDialog.Builder builder = new AlertDialog.Builder(subjects);
 
         builder.setTitle("Eliminar Asignatura")
-                .setMessage("La asignatura se eliminará definitivamente, ¿está seguro?")
+                .setMessage("La asignatura " + listaAsignaturasFiltered.get(pos).getName() + " se eliminará definitivamente, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
-                            //String asignaturaBorra = listaAsignaturasFiltered.get(pos).getName();
-
+                            int indice = -1;
+                            for (int i = 0; i < listaAsignaturas.size(); i++) {
+                                if (listaAsignaturas.get(i).getName().equals(listaAsignaturasFiltered.get(pos).getName()))
+                                    indice = i;
+                            }
+                            if (indice != -1)
+                                listaAsignaturas.remove(indice);
 
                             Thread t = new Thread() {
                                 public void run() {
                                     AppDatabase db = AppDatabase.Companion.getAppDatabase(context);
-                                    SubjectEntity subjectEntity = db.subjectDao().getByName(listaAsignaturas.get(pos).getName());
+                                    SubjectEntity subjectEntity = db.subjectDao().getByName(listaAsignaturasFiltered.get(pos).getName());
                                     db.subjectDao().delete(subjectEntity);
-                                    listaAsignaturas.remove(pos);
+                                    listaAsignaturasFiltered.remove(pos);
 
                                 }
                             };
