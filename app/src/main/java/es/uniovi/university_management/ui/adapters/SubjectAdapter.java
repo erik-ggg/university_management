@@ -16,6 +16,8 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Test;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.TestEntity;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHolder> {
 
@@ -46,7 +48,7 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
         holder.mark.setText(String.valueOf(nota.getMark()));
         holder.eliminar.setOnClickListener(view -> {
 
-            //confirmaBorrado(position);
+            confirmaBorrado(position);
 
         });
 
@@ -55,15 +57,26 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.MyViewHo
 
 
     private void confirmaBorrado(int pos) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(subjectActivity);
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
         builder.setTitle("Eliminar nota")
                 .setMessage("La nota se eliminará definitivamente, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
 
-                            listaNotas.remove(pos);
+
                             SubjectAdapter.this.notifyDataSetChanged();
+                            Thread t = new Thread() {
+                                public void run() {
+                                    AppDatabase db = AppDatabase.Companion.getAppDatabase(context);
+                                    TestEntity testEntity = db.testDao().getByNameAndSection(listaNotas.get(pos).getName(), listaNotas.get(pos).getMark());
+                                    db.testDao().delete(testEntity);
+                                    listaNotas.remove(pos);
+
+                                }
+                            };
+                            t.start();
+
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())

@@ -14,6 +14,12 @@ interface TestDao {
     @Query("SELECT * FROM testentity WHERE sectionId = :id")
     fun getBySectionId(id: Long): List<TestEntity>
 
+    @Query("SELECT * FROM testentity WHERE name = :name AND mark = :mark")
+    fun getByNameAndSection(
+        name: String,
+        mark: Double
+    ): TestEntity
+
     @Insert
     fun insert(test: TestEntity): Long
 

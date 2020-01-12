@@ -51,11 +51,11 @@ public class FragmentSubject extends Fragment {
     private SubjectAdapter adapterPracticas;
     private SubjectAdapter adapterSeminario;
 
-    final AppDatabase[] db = new AppDatabase[1];
-    final Long[] subjectId = new Long[1];
-    final Long[] theoryId = new Long[1];
-    final Long[] practiceId = new Long[1];
-    final Long[] seminaryId = new Long[1];
+    private final AppDatabase[] db = new AppDatabase[1];
+    private final Long[] subjectId = new Long[1];
+    private final Long[] theoryId = new Long[1];
+    private final Long[] practiceId = new Long[1];
+    private final Long[] seminaryId = new Long[1];
 
     public static FragmentSubject newInstance(int sectionNumber, String subject) {
         FragmentSubject fragment = new FragmentSubject();
@@ -114,9 +114,6 @@ public class FragmentSubject extends Fragment {
         final List<Date> practiceDate = new ArrayList<>();
         final List<Date> seminaryDate = new ArrayList<>();
 
-        List<Test> notasTeoria = new ArrayList<>();
-        List<Test> notasPractica = new ArrayList<>();
-        List<Test> notasSeminario = new ArrayList<>();
 
 
         // Carga desde base de datos
@@ -157,21 +154,24 @@ public class FragmentSubject extends Fragment {
                 for (TestEntity item : theoryTest) {
                     name = item.getName();
                     mark = item.getMark();
-                    notasTeoria.add(new Test(name, 1, mark));
+                    if (!isTestInList(name, notasTeoria))
+                        notasTeoria.add(new Test(name, 1, mark));
                 }
 
                 List<TestEntity> practiseTest = db[0].testDao().getBySectionId(practiceId[0]);
                 for (TestEntity item : practiseTest) {
                     name = item.getName();
                     mark = item.getMark();
-                    notasPractica.add(new Test(name, 2, mark));
+                    if (!isTestInList(name, notasPractica))
+                        notasPractica.add(new Test(name, 2, mark));
                 }
 
-                List<TestEntity> seminaryTest = db[0].testDao().getBySectionId(practiceId[0]);
+                List<TestEntity> seminaryTest = db[0].testDao().getBySectionId(seminaryId[0]);
                 for (TestEntity item : seminaryTest) {
                     name = item.getName();
                     mark = item.getMark();
-                    notasSeminario.add(new Test(name, 3, mark));
+                    if (!isTestInList(name, notasSeminario))
+                        notasSeminario.add(new Test(name, 3, mark));
                 }
 
                 TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
@@ -207,9 +207,9 @@ public class FragmentSubject extends Fragment {
         listaNotasView.addItemDecoration(new DividerItemDecoration(rootView.getContext(), LinearLayoutManager.VERTICAL));
 
 
-        adapterTeoria = new SubjectAdapter(this.notasTeoria, rootView.getContext());
-        adapterPracticas = new SubjectAdapter(this.notasPractica, rootView.getContext());
-        adapterSeminario = new SubjectAdapter(this.notasSeminario, rootView.getContext());
+        adapterTeoria = new SubjectAdapter(notasTeoria, rootView.getContext());
+        adapterPracticas = new SubjectAdapter(notasPractica, rootView.getContext());
+        adapterSeminario = new SubjectAdapter(notasSeminario, rootView.getContext());
         switch (section) {
             case 0:
                 listaNotasView.setAdapter(adapterTeoria);
@@ -351,30 +351,35 @@ public class FragmentSubject extends Fragment {
             case 1:
                 Thread t1 = new Thread() {
                     public void run() {
+
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
                         db.testDao().insert(new TestEntity(theoryId[0], testDescription, d));
+                        notasTeoria.add(new Test(testDescription, 1, d));
                     }
-
                 };
                 t1.start();
                 adapterTeoria.notifyDataSetChanged();
                 break;
+
             case 2:
                 Thread t2 = new Thread() {
                     public void run() {
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
                         db.testDao().insert(new TestEntity(practiceId[0], testDescription, d));
+                        notasPractica.add(new Test(testDescription, 2, d));
                     }
 
                 };
                 t2.start();
                 adapterPracticas.notifyDataSetChanged();
                 break;
+
             case 3:
                 Thread t3 = new Thread() {
                     public void run() {
                         AppDatabase db = AppDatabase.Companion.getAppDatabase(getActivity());
                         db.testDao().insert(new TestEntity(seminaryId[0], testDescription, d));
+                        notasSeminario.add(new Test(testDescription, 3, d));
                     }
 
                 };
@@ -385,6 +390,17 @@ public class FragmentSubject extends Fragment {
                 //assume you only have 3
                 throw new IllegalArgumentException();
         }
+    }
+
+
+    private boolean isTestInList(String test, List<Test> lista) {
+        boolean isIn = false;
+
+        for (Test item : lista) {
+            if (test.equals(item.getName()))
+                isIn = true;
+        }
+        return isIn;
     }
 
 }
