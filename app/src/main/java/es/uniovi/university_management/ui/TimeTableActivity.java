@@ -25,6 +25,7 @@ import java.util.Calendar;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
+import es.uniovi.university_management.repositories.SectionTimeRepository;
 import es.uniovi.university_management.ui.adapters.DatesAdapter;
 import es.uniovi.university_management.ui.dialog.DatePickerFragment;
 
@@ -64,47 +65,18 @@ public class TimeTableActivity extends AppCompatActivity {
         manageLayout(listaPracticaView, mLayoutManager2);
         manageLayout(listaSeminarioView, mLayoutManager3);
 
-        //harcodeando los horarios
-        //TODO cargar los horarios desde la base de datos
+        horarioTeoria = new TimeSubject(subjectName, 1, new ArrayList<>(), new ArrayList<>());
+        horarioPracticas = new TimeSubject(subjectName, 2, new ArrayList<>(), new ArrayList<>());
+        horarioSeminarios = new TimeSubject(subjectName, 3, new ArrayList<>(), new ArrayList<>());
 
-        ArrayList startDates1 = new ArrayList<>();
-        startDates1.add("07/01/2020");
-        startDates1.add("10/01/2020");
-        startDates1.add("14/01/2020");
-        startDates1.add("17/01/2020");
-        ArrayList startTimes1 = new ArrayList<>();
-        startTimes1.add("9.00");
-        startTimes1.add("10.00");
-        startTimes1.add("9.00");
-        startTimes1.add("10.00");
-        ArrayList startDates2 = new ArrayList<>();
-        startDates2.add("08/01/2020");
-        startDates2.add("11/01/2020");
-        startDates2.add("15/01/2020");
-        startDates2.add("18/01/2020");
-        ArrayList startTimes2 = new ArrayList<>();
-        startTimes2.add("9.00");
-        startTimes2.add("10.00");
-        startTimes2.add("9.00");
-        startTimes2.add("10.00");
-        ArrayList startDates3 = new ArrayList<>();
-        startDates3.add("08/11/2019");
-        startDates3.add("11/11/2019");
-        startDates3.add("15/11/2019");
-        startDates3.add("18/11/2019");
-        ArrayList startTimes3 = new ArrayList<>();
-        startTimes3.add("14.00");
-        startTimes3.add("15.00");
-        startTimes3.add("14.00");
-        startTimes3.add("15.00");
-        horarioTeoria = new TimeSubject("Asignatura", 1, startDates1, startTimes1);
-        horarioPracticas = new TimeSubject("Asignatura", 2, startDates2, startTimes2);
-        horarioSeminarios = new TimeSubject("Asignatura", 3, startDates3, startTimes3);
-        //fin hardcoding
+        SectionTimeRepository repository = new SectionTimeRepository();
+        repository.getAllBySubjectName(subjectName, horarioTeoria, horarioPracticas, horarioSeminarios,
+                getApplicationContext());
 
         adapterTeoria = new DatesAdapter(horarioTeoria, getApplicationContext(), TimeTableActivity.this);
         adapterPractica = new DatesAdapter(horarioPracticas, getApplicationContext(), TimeTableActivity.this);
         adapterSeminario = new DatesAdapter(horarioSeminarios, getApplicationContext(), TimeTableActivity.this);
+
         listaTeoriaView.setAdapter(adapterTeoria);
         listaPracticaView.setAdapter(adapterPractica);
         listaSeminarioView.setAdapter(adapterSeminario);

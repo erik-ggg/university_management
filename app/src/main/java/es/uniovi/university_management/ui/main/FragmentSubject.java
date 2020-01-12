@@ -68,8 +68,8 @@ public class FragmentSubject extends Fragment {
                 if (id != null) {
                     subjectId[0] = Long.valueOf(id);
                     theoryId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
-                    practiceId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
-                    seminaryId[0] = db[0].theoryDao().getBySubjectId(subjectId[0]).getId();
+                    practiceId[0] = db[0].practiceDao().getBySubjectId(subjectId[0]).getId();
+                    seminaryId[0] = db[0].seminaryDao().getBySubjectId(subjectId[0]).getId();
                 }
 
                 List<SectionTimeEntity> theorySectionsTime = db[0].sectionTimeDao().getBySectionId(theoryId[0]);

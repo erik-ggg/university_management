@@ -7,19 +7,34 @@ import es.uniovi.university_management.classes.Subject
 import es.uniovi.university_management.classes.TimeSubject
 import es.uniovi.university_management.database.AppDatabase.Companion.getAppDatabase
 import es.uniovi.university_management.model.*
+import java.lang.RuntimeException
 import java.text.DateFormat
 import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
 class SubjectRepository {
+    fun getSubject(name: String, context: Context) {
+//        var id: Long = -1
+//        val t: Thread = object : Thread() {
+//            override fun run() {
+//                val db = getAppDatabase(context)
+//                id = db?.subjectDao()?.getByName(name)?.id!!.toLong()
+//                if (id == -1L)
+//                    throw RuntimeException("Subject not found")
+//                else
+//                    return id
+//            }
+//        }
+//        t.start()
+    }
+
     fun addSubjects(subjects: List<Subject>, context: Context) {
         val t: Thread = object : Thread() {
             override fun run() {
                 val db = getAppDatabase(context)
                 //                    db.subjectDao().insertSubjects(subjects, db);
-                val teachersId: MutableList<Long> =
-                    ArrayList()
+                val teachersId: MutableList<Long> = ArrayList()
                 var officeId = 1L
                 for (subject in subjects) {
                     for (teacher in subject.teachers!!) {
@@ -82,8 +97,7 @@ class SubjectRepository {
                                 db.seminaryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
                         }
                         // Si existe algun dato ya introducido no lo aniadimos
-                        val data =
-                            db.sectionTimeDao().getBySectionId(sectionId!!)
+                        val data = db.sectionTimeDao().getBySectionId(sectionId!!)
                         if (data.size == 0) {
                             for (i in startDate.indices) {
                                 var date: String? = startDate[i]
@@ -91,13 +105,8 @@ class SubjectRepository {
                                 date += time
                                 try {
                                     val resDate = formatter.parse(date)
-                                    db.sectionTimeDao().insert(
-                                        SectionTimeEntity(
-                                            sectionId,
-                                            resDate.time,
-                                            resDate.time
-                                        )
-                                    )
+                                    db.sectionTimeDao().insert(SectionTimeEntity(
+                                        sectionId, resDate.time, resDate.time))
                                 } catch (e: ParseException) {
                                     e.printStackTrace()
                                 }

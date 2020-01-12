@@ -10,6 +10,12 @@ public class DateParser {
 
     private static final String ZERO = "0";
 
+    public static String LongToString(Long date) {
+        SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH.mm");
+        Date aux = new Date(date);
+        return formatter.format(aux);
+    }
+
     public Date stringToDate(String date, String time) {
         SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy HH.mm");
         Date fechaHorario = null;
