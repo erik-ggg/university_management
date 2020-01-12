@@ -129,20 +129,20 @@ public class FragmentSubject extends Fragment {
                     seminaryId[0] = db[0].seminaryDao().getBySubjectId(subjectId[0]).getId();
                 }
 
-                List<SectionTimeEntity> theorySectionsTime = db[0].sectionTimeDao().getBySectionId(theoryId[0]);
+                List<SectionTimeEntity> theorySectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(theoryId[0], 1);
                 Date date;
                 for (SectionTimeEntity item : theorySectionsTime) {
                     date = new Date(item.getStartDate());
                     theoryDate.add(date);
                 }
 
-                List<SectionTimeEntity> practiceSectionsTime = db[0].sectionTimeDao().getBySectionId(practiceId[0]);
+                List<SectionTimeEntity> practiceSectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(practiceId[0], 2);
                 for (SectionTimeEntity item : practiceSectionsTime) {
                     date = new Date(item.getStartDate());
                     practiceDate.add(date);
                 }
 
-                List<SectionTimeEntity> seminarySectionsTime = db[0].sectionTimeDao().getBySectionId(seminaryId[0]);
+                List<SectionTimeEntity> seminarySectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(seminaryId[0], 3);
                 for (SectionTimeEntity item : seminarySectionsTime) {
                     date = new Date(item.getStartDate());
                     seminaryDate.add(date);

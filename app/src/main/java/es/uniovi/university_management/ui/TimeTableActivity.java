@@ -54,9 +54,9 @@ public class TimeTableActivity extends AppCompatActivity {
         Bundle param = this.getIntent().getExtras();
         String subjectName = param.getString("nombreAsignatura");
 
-        RecyclerView listaTeoriaView = (RecyclerView) findViewById(R.id.recycler_dates_theory);
-        RecyclerView listaPracticaView = (RecyclerView) findViewById(R.id.recycler_dates_practic);
-        RecyclerView listaSeminarioView = (RecyclerView) findViewById(R.id.recycler_dates_sem);
+        RecyclerView listaTeoriaView = findViewById(R.id.recycler_dates_theory);
+        RecyclerView listaPracticaView = findViewById(R.id.recycler_dates_practic);
+        RecyclerView listaSeminarioView = findViewById(R.id.recycler_dates_sem);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager2 = new LinearLayoutManager(getApplicationContext());
         RecyclerView.LayoutManager mLayoutManager3 = new LinearLayoutManager(getApplicationContext());
@@ -85,13 +85,7 @@ public class TimeTableActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showSectionDialog();
-
-            }
-        });
+        fab.setOnClickListener(view -> showSectionDialog());
     }
 
     @Override

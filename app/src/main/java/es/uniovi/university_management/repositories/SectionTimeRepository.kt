@@ -25,23 +25,35 @@ class SectionTimeRepository {
 
                     if (theoryId != null && practiceId != null && seminaryId != null) {
                         val theoryStringDates = mutableListOf<String>()
+                        val theoryStringTimes = mutableListOf<String>()
                         val practiceStringDates = mutableListOf<String>()
+                        val practiceStringTimes = mutableListOf<String>()
                         val seminaryStringDates = mutableListOf<String>()
+                        val seminaryStringTimes = mutableListOf<String>()
 
-                        db.sectionTimeDao().getBySectionId(theoryId).forEach{
-                            theoryStringDates.add(DateParser.LongToString(it.startDate))
+                        db.sectionTimeDao().getBySectionIdAndType(theoryId, 1).forEach{
+                            val date = DateParser.LongToString(it.startDate).split(" ")
+                            theoryStringDates.add(date[0])
+                            theoryStringTimes.add(date[1])
                         }
                         theoryDate.startDate = theoryStringDates
+                        theoryDate.startTime = theoryStringTimes
 
-                        db.sectionTimeDao().getBySectionId(practiceId).forEach{
-                            practiceStringDates.add(DateParser.LongToString(it.startDate))
+                        db.sectionTimeDao().getBySectionIdAndType(practiceId, 2).forEach{
+                            val date = DateParser.LongToString(it.startDate).split(" ")
+                            practiceStringDates.add(date[0])
+                            practiceStringTimes.add(date[1])
                         }
                         practiceDate.startDate = practiceStringDates
+                        practiceDate.startTime = practiceStringDates
 
-                        db.sectionTimeDao().getBySectionId(seminaryId).forEach{
-                            seminaryStringDates.add(DateParser.LongToString(it.startDate))
+                        db.sectionTimeDao().getBySectionIdAndType(seminaryId, 3).forEach{
+                            val date = DateParser.LongToString(it.startDate).split(" ")
+                            seminaryStringDates.add(date[0])
+                            seminaryStringTimes.add(date[1])
                         }
                         seminaryDate.startDate = seminaryStringDates
+                        seminaryDate.startTime = seminaryStringTimes
                     } else
                         throw RuntimeException("Theory or Practice or Seminary is null")
                 }

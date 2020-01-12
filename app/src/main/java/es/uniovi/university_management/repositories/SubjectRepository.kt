@@ -89,15 +89,16 @@ class SubjectRepository {
                     val subjectEntity = db!!.subjectDao().getByName(name)
                     if (subjectEntity != null) {
                         when (type) {
-                            1 -> sectionId =
-                                db.theoryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
-                            2 -> sectionId =
-                                db.practiceDao().getBySubjectId(subjectEntity.id!!.toLong()).id
-                            3 -> sectionId =
-                                db.seminaryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
+                            1 ->
+                                sectionId = db.theoryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
+
+                            2 ->
+                                sectionId = db.practiceDao().getBySubjectId(subjectEntity.id!!.toLong()).id
+                            3 ->
+                                sectionId = db.seminaryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
                         }
                         // Si existe algun dato ya introducido no lo aniadimos
-                        val data = db.sectionTimeDao().getBySectionId(sectionId!!)
+                        val data = db.sectionTimeDao().getBySectionIdAndType(sectionId!!, type)
                         if (data.size == 0) {
                             for (i in startDate.indices) {
                                 var date: String? = startDate[i]
@@ -106,7 +107,7 @@ class SubjectRepository {
                                 try {
                                     val resDate = formatter.parse(date)
                                     db.sectionTimeDao().insert(SectionTimeEntity(
-                                        sectionId, resDate.time, resDate.time))
+                                        sectionId, type, resDate.time, resDate.time))
                                 } catch (e: ParseException) {
                                     e.printStackTrace()
                                 }

@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class SectionTimeEntity(val sectionId: Long, val startDate: Long, val endDate: Long) {
+data class SectionTimeEntity(val sectionId: Long, val sectionType: Int, val startDate: Long, val endDate: Long) {
     @PrimaryKey(autoGenerate = true)
     var id: Int? = null
 }
