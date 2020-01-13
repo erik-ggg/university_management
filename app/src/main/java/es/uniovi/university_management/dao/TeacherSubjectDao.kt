@@ -14,6 +14,9 @@ interface TeacherSubjectDao {
     @Query("SELECT * FROM teachersubjectentity WHERE subjectId = :id")
     fun getBySubjectId(id: Long): List<TeacherSubjectEntity>
 
+    @Query("SELECT * FROM teachersubjectentity WHERE teacherId = :id")
+    fun getByTeacherId(id: Int?): TeacherSubjectEntity
+
     @Insert
     fun insert(teacherSubject: TeacherSubjectEntity): Long
 

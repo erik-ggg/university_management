@@ -12,6 +12,9 @@ interface TeacherDao {
     @Query("SELECT * FROM teacherentity")
     fun getAll(): List<TeacherEntity>
 
+    @Query("SELECT * FROM teacherentity WHERE name = :name")
+    fun getByName(name: String): TeacherEntity
+
     @Query("SELECT * FROM teacherentity WHERE id = :id")
     fun getById(id: Long): TeacherEntity
 

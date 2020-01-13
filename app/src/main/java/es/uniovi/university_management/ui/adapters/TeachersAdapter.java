@@ -22,6 +22,7 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Teacher;
+import es.uniovi.university_management.repositories.TeachersRepository;
 import es.uniovi.university_management.ui.MapsActivity;
 
 public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyViewHolder> {
@@ -99,6 +100,8 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyView
                 .setMessage("El profesor se eliminará definitivamente, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
+                            TeachersRepository repository = new TeachersRepository();
+                            repository.deleteTeacher(listaProfesores.get(pos).getName(), context);
 
                             listaProfesores.remove(pos);
                             TeachersAdapter.this.notifyDataSetChanged();
