@@ -45,7 +45,7 @@ class SectionTimeRepository {
                             practiceStringTimes.add(date[1])
                         }
                         practiceDate.startDate = practiceStringDates
-                        practiceDate.startTime = practiceStringDates
+                        practiceDate.startTime = practiceStringTimes
 
                         db.sectionTimeDao().getBySectionIdAndType(seminaryId, 3).forEach{
                             val date = DateParser.LongToString(it.startDate).split(" ")

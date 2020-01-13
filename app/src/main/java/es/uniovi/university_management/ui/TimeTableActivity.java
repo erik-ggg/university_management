@@ -23,6 +23,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.TimeSubject;
@@ -117,13 +118,10 @@ public class TimeTableActivity extends AppCompatActivity {
         items[2] = "Seminario";
 
         builder.setTitle("Elija la sección")
-                .setItems(items, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        sectionSelected = which + 1;
-                        Log.i("Selección de sección", "seleccionado " + items[which]);
-                        showDatePickerDialog();
-                    }
+                .setItems(items, (dialog, which) -> {
+                    sectionSelected = which + 1;
+                    Log.i("Selección de sección", "seleccionado " + items[which]);
+                    showDatePickerDialog();
                 })
                 .show();
     }
