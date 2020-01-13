@@ -9,7 +9,7 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_width="0dp"
-        android:layout_height="30dp"
+        android:layout_height="40dp"
         android:layout_marginStart="5dp"
         android:layout_marginTop="5dp"
         android:layout_marginEnd="5dp"
@@ -22,7 +22,8 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_margin="2dp">
 
             <TextView
                 android:id="@+id/nombre_asignatura"
@@ -33,10 +34,9 @@
                 android:id="@+id/botonEliminarAsignatura"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
-                android:layout_marginStart="300dp"
-                android:layout_marginEnd="5dp"
+                android:layout_alignParentEnd="true"
                 android:contentDescription="@string/delete_item"
+                android:background="@color/common_google_signin_btn_text_dark_default"
                 android:src="@android:drawable/ic_menu_delete" />
         </RelativeLayout>
 

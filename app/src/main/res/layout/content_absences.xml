@@ -19,7 +19,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:text="TEORÍA"
+            android:text="@string/teoria_label"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -34,7 +36,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:text="PRÁCTICAS"
+            android:text="@string/practicas_label"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
         <androidx.recyclerview.widget.RecyclerView
@@ -47,7 +51,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorAccent"
-            android:text="SEMINARIO"
+            android:text="@string/seminario_label"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/common_google_signin_btn_text_dark_default" />
 
         <androidx.recyclerview.widget.RecyclerView

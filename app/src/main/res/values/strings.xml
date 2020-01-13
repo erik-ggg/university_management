@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">university_management</string>
+    <string name="app_name">Gestor EII</string>
 
     <string name="delete_item">Papelera</string>
 
@@ -31,7 +31,7 @@
     <string name="title_activity_absences">Asistencias</string>
     <string name="title_activity_settings">Ajustes</string>
     <string name="title_activity_subject">SubjectActivity</string>
-    <string name="title_activity_subjects">Subjects</string>
+    <string name="title_activity_subjects">Gestor EII</string>
     <string name="search_hint">búsqueda</string>
     <string name="send_email">Enviar E-mail</string>
     <string name="get_despacho">Ubicación despacho</string>
@@ -48,5 +48,8 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="app_launcher_name">Gestor EII</string>
+    <string name="seminario_label">SEMINARIO</string>
+    <string name="practicas_label">PRÁCTICAS</string>
+    <string name="teoria_label">TEORÍA</string>
 
 </resources>
