@@ -29,12 +29,14 @@ import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
+import es.uniovi.university_management.classes.Absence;
 import es.uniovi.university_management.classes.Practice;
 import es.uniovi.university_management.classes.Section;
 import es.uniovi.university_management.classes.Seminary;
 import es.uniovi.university_management.classes.Test;
 import es.uniovi.university_management.classes.Theory;
 import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.AbsenceEntity;
 import es.uniovi.university_management.model.SectionTimeEntity;
 import es.uniovi.university_management.model.TestEntity;
 import es.uniovi.university_management.ui.AbsencesActivity;
@@ -118,6 +120,16 @@ public class FragmentSubject extends Fragment {
             }
         });
 
+        Section section1 = new Section(60);
+        Section section2 = new Section(30);
+        Section section3 = new Section(10);
+        final Theory[] theory = new Theory[1];
+        final Practice[] practice = new Practice[1];
+        final Seminary[] seminary = new Seminary[1];
+
+        final int[] allowedAbscensesPractice = {0};
+        final int[] allowedAbscensesSeminary = {0};
+
         // Carga desde base de datos
         Thread t1 = new Thread() {
             @Override
@@ -132,6 +144,7 @@ public class FragmentSubject extends Fragment {
                 }
 
                 List<SectionTimeEntity> theorySectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(theoryId[0], 1);
+                theory[0] = new Theory(section2, theorySectionsTime.size());
                 Date date;
                 for (SectionTimeEntity item : theorySectionsTime) {
                     date = new Date(item.getStartDate());
@@ -139,15 +152,28 @@ public class FragmentSubject extends Fragment {
                 }
 
                 List<SectionTimeEntity> practiceSectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(practiceId[0], 2);
+                practice[0] = new Practice(section1, practiceSectionsTime.size());
                 for (SectionTimeEntity item : practiceSectionsTime) {
                     date = new Date(item.getStartDate());
                     practiceDate.add(date);
                 }
 
                 List<SectionTimeEntity> seminarySectionsTime = db[0].sectionTimeDao().getBySectionIdAndType(seminaryId[0], 3);
+                seminary[0] = new Seminary(section3, seminarySectionsTime.size());
                 for (SectionTimeEntity item : seminarySectionsTime) {
                     date = new Date(item.getStartDate());
                     seminaryDate.add(date);
+                }
+
+                List<AbsenceEntity> absences = db[0].absenceDao().getBySubjectId(id);
+                for (AbsenceEntity absence : absences) {
+                    int type = absence.getSectionType();
+                    if (type == 1)
+                        theory[0].getAbsences().add(new Absence(new Date(absence.getDate()), 1, absence.isAutomatic()));
+                    else if (type == 2)
+                        practice[0].getAbsences().add(new Absence(new Date(absence.getDate()), 2, absence.isAutomatic()));
+                    else
+                        seminary[0].getAbsences().add(new Absence(new Date(absence.getDate()), 3, absence.isAutomatic()));
                 }
 
                 List<TestEntity> theoryTest = db[0].testDao().getBySectionId(theoryId[0]);
@@ -172,6 +198,30 @@ public class FragmentSubject extends Fragment {
                     }
                 }
 
+
+
+                int maxAbscensesPractice = (int) practice[0].getMaxAbscense();
+                int maxAbscensesSeminary = (int) seminary[0].getMaxAbscense();
+                allowedAbscensesPractice[0] = maxAbscensesPractice - (practice[0].getAbsences().size());
+                allowedAbscensesSeminary[0] = maxAbscensesSeminary - (seminary[0].getAbsences().size());
+
+                getActivity().runOnUiThread(() -> {
+                    TextView textPractice = rootView.findViewById(R.id.textAusenciasRestantesPracticas);
+                    if (!practice[0].isInContinua())
+                        textPractice.setText("Has perdido la evaluación continua en prácticas");
+                    else {
+                        String textoPractica = "Puedes faltar a " + allowedAbscensesPractice[0] + " sesiones más de prácticas";
+                        textPractice.setText(textoPractica);
+                    }
+                    TextView textSeminary = rootView.findViewById(R.id.textAusenciasRestantesSeminario);
+                    if (!seminary[0].isInContinua())
+                        textSeminary.setText("Has perdido la evaluación continua en seminario");
+                    else {
+                        String textoSeminario = "Puedes faltar a " + allowedAbscensesSeminary[0] + " sesiones más de seminario";
+                        textSeminary.setText(textoSeminario);
+                    }
+                });
+
                 TextView nextLesson = rootView.findViewById(R.id.textNextLesson);
                 switch (section) {
                     case 0:
@@ -188,42 +238,23 @@ public class FragmentSubject extends Fragment {
         };
         t1.start();
 
-
-        //TODO se podría sacar de la base de datos Teoria, Practica y Seminario de la asignatura. Si numberOfLessons no está metido,
-        //habría que sacarlo de los horarios de la sectionID, y luego calcular las ausencias máximas (suponemos siempre un 0.8).
-
-
-        //harcodeando las absences
-        Section section1 = new Section(60);
-        Section section2 = new Section(30);
-        Section section3 = new Section(10);
-        Theory theory = new Theory(section2, 16);
-        Seminary seminary = new Seminary(section3, 8);
-        Practice practice = new Practice(section1, 14);
-        //fin hardcoding
-
-        int maxAbscensesPractice = (int) practice.getMaxAbscense();
-        int maxAbscensesSeminary = (int) seminary.getMaxAbscense();
-        int allowedAbscensesPractice = maxAbscensesPractice - (practice.getAbsences().size());
-        int allowedAbscensesSeminary = maxAbscensesSeminary - (seminary.getAbsences().size());
-
-        TextView textPractice = rootView.findViewById(R.id.textAusenciasRestantesPracticas);
-        if (!practice.isInContinua())
-            textPractice.setText("Has perdido la evaluación continua en prácticas");
-        else {
-            String textoPractica = "Puedes faltar a " + allowedAbscensesPractice + " sesiones más de prácticas";
-            textPractice.setText(textoPractica);
-        }
-        TextView textSeminary = rootView.findViewById(R.id.textAusenciasRestantesSeminario);
-        if (!seminary.isInContinua())
-            textSeminary.setText("Has perdido la evaluación continua en seminario");
-        else {
-            String textoSeminario = "Puedes faltar a " + allowedAbscensesSeminary + " sesiones más de seminario";
-            textSeminary.setText(textoSeminario);
-        }
+//        TextView textPractice = rootView.findViewById(R.id.textAusenciasRestantesPracticas);
+//        if (!practice[0].isInContinua())
+//            textPractice.setText("Has perdido la evaluación continua en prácticas");
+//        else {
+//            String textoPractica = "Puedes faltar a " + allowedAbscensesPractice[0] + " sesiones más de prácticas";
+//            textPractice.setText(textoPractica);
+//        }
+//        TextView textSeminary = rootView.findViewById(R.id.textAusenciasRestantesSeminario);
+//        if (!seminary[0].isInContinua())
+//            textSeminary.setText("Has perdido la evaluación continua en seminario");
+//        else {
+//            String textoSeminario = "Puedes faltar a " + allowedAbscensesSeminary[0] + " sesiones más de seminario";
+//            textSeminary.setText(textoSeminario);
+//        }
 
 
-        RecyclerView listaNotasView = (RecyclerView) rootView.findViewById(R.id.notasRecycler);
+        RecyclerView listaNotasView = rootView.findViewById(R.id.notasRecycler);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(rootView.getContext());
         listaNotasView.setLayoutManager(mLayoutManager);
         listaNotasView.setItemAnimator(new DefaultItemAnimator());

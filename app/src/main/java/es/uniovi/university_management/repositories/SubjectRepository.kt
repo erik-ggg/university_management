@@ -91,7 +91,6 @@ class SubjectRepository {
                         when (type) {
                             1 ->
                                 sectionId = db.theoryDao().getBySubjectId(subjectEntity.id!!.toLong()).id
-
                             2 ->
                                 sectionId = db.practiceDao().getBySubjectId(subjectEntity.id!!.toLong()).id
                             3 ->
