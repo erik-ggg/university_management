@@ -55,15 +55,13 @@
             android:id="@+id/textAusenciasRestantesPracticas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/textNotaMedia"
-            android:text="Puedes faltar a 2 sesiones más de prácticas" />
+            android:layout_above="@id/textNotaMedia" />
 
         <TextView
             android:id="@+id/textAusenciasRestantesSeminario"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@id/textAusenciasRestantesPracticas"
-            android:text="Puedes faltar a 2 sesiones más de seminario" />
+            android:layout_above="@id/textAusenciasRestantesPracticas" />
     </RelativeLayout>
 </LinearLayout>
 

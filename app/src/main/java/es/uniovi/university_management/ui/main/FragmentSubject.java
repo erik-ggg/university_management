@@ -29,7 +29,11 @@ import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
+import es.uniovi.university_management.classes.Practice;
+import es.uniovi.university_management.classes.Section;
+import es.uniovi.university_management.classes.Seminary;
 import es.uniovi.university_management.classes.Test;
+import es.uniovi.university_management.classes.Theory;
 import es.uniovi.university_management.database.AppDatabase;
 import es.uniovi.university_management.model.SectionTimeEntity;
 import es.uniovi.university_management.model.TestEntity;
@@ -184,13 +188,40 @@ public class FragmentSubject extends Fragment {
         };
         t1.start();
 
-        //harcodeando las notas
-        //notasTeoria = new ArrayList<Test>();
-        //notasPractica = new ArrayList<Test>();
-        //notasSeminario = new ArrayList<Test>();
-        //notasTeoria.add(new Test("examen 1",1, 5.2));
-        //notasPractica.add(new Test("examen 2", 2,8.7));
+
+        //TODO se podría sacar de la base de datos Teoria, Practica y Seminario de la asignatura. Si numberOfLessons no está metido,
+        //habría que sacarlo de los horarios de la sectionID, y luego calcular las ausencias máximas (suponemos siempre un 0.8).
+
+
+        //harcodeando las absences
+        Section section1 = new Section(60);
+        Section section2 = new Section(30);
+        Section section3 = new Section(10);
+        Theory theory = new Theory(section2, 16);
+        Seminary seminary = new Seminary(section3, 8);
+        Practice practice = new Practice(section1, 14);
         //fin hardcoding
+
+        int maxAbscensesPractice = (int) practice.getMaxAbscense();
+        int maxAbscensesSeminary = (int) seminary.getMaxAbscense();
+        int allowedAbscensesPractice = maxAbscensesPractice - (practice.getAbsences().size());
+        int allowedAbscensesSeminary = maxAbscensesSeminary - (seminary.getAbsences().size());
+
+        TextView textPractice = rootView.findViewById(R.id.textAusenciasRestantesPracticas);
+        if (!practice.isInContinua())
+            textPractice.setText("Has perdido la evaluación continua en prácticas");
+        else {
+            String textoPractica = "Puedes faltar a " + allowedAbscensesPractice + " sesiones más de prácticas";
+            textPractice.setText(textoPractica);
+        }
+        TextView textSeminary = rootView.findViewById(R.id.textAusenciasRestantesSeminario);
+        if (!seminary.isInContinua())
+            textSeminary.setText("Has perdido la evaluación continua en seminario");
+        else {
+            String textoSeminario = "Puedes faltar a " + allowedAbscensesSeminary + " sesiones más de seminario";
+            textSeminary.setText(textoSeminario);
+        }
+
 
         RecyclerView listaNotasView = (RecyclerView) rootView.findViewById(R.id.notasRecycler);
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(rootView.getContext());
