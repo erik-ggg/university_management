@@ -133,19 +133,21 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.MyView
                 .setPositiveButton("OK",
                         (dialog, which) -> {
                             int indice = -1;
-                            for (int i = 0; i < listaAsignaturas.size(); i++) {
-                                if (listaAsignaturas.get(i).getName().equals(listaAsignaturasFiltered.get(pos).getName()))
-                                    indice = i;
-                            }
-                            if (indice != -1)
-                                listaAsignaturas.remove(indice);
+
 
                             Thread t = new Thread() {
                                 public void run() {
+                                    int indice = -1;
+                                    for (int i = 0; i < listaAsignaturas.size(); i++) {
+                                        if (listaAsignaturas.get(i).getName().equals(listaAsignaturasFiltered.get(pos).getName()))
+                                            indice = i;
+                                    }
                                     AppDatabase db = AppDatabase.Companion.getAppDatabase(context);
                                     SubjectEntity subjectEntity = db.subjectDao().getByName(listaAsignaturasFiltered.get(pos).getName());
                                     db.subjectDao().delete(subjectEntity);
-                                    listaAsignaturasFiltered.remove(pos);
+                                    if (indice != -1)
+                                        listaAsignaturas.remove(indice);
+
 
                                 }
                             };
