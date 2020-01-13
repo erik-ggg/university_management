@@ -8,8 +8,15 @@ import es.uniovi.university_management.model.AbsenceEntity
 
 @Dao
 interface AbsenceDao {
+
     @Query("SELECT * FROM absenceentity")
     fun getAll(): List<AbsenceEntity>
+
+    @Query("SELECT * FROM absenceentity WHERE sectionId = :id")
+    fun getBySubjectId(id: Long): List<AbsenceEntity>
+
+    @Query("SELECT * FROM absenceentity WHERE date = :date")
+    fun getByDate(date: Long): AbsenceEntity
 
     @Insert
     fun insert(absence: AbsenceEntity): Long

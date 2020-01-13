@@ -25,6 +25,9 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Absence;
+import es.uniovi.university_management.database.AppDatabase;
+import es.uniovi.university_management.model.AbsenceEntity;
+import es.uniovi.university_management.repositories.AbsencesRepository;
 import es.uniovi.university_management.ui.adapters.AbsencesAdapter;
 import es.uniovi.university_management.ui.dialog.DatePickerFragment;
 import es.uniovi.university_management.util.DateParser;
@@ -40,6 +43,7 @@ public class AbsencesActivity extends AppCompatActivity {
     AbsencesAdapter adapterTeoria;
     AbsencesAdapter adapterPractica;
     AbsencesAdapter adapterSeminario;
+    String subjectName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +53,7 @@ public class AbsencesActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         Bundle param = this.getIntent().getExtras();
-        String subjectName = param.getString("nombreAsignatura");
+        subjectName = param.getString("nombreAsignatura");
 
         RecyclerView listaTeoriaView = (RecyclerView) findViewById(R.id.recycler_dates_theory);
         RecyclerView listaPracticaView = (RecyclerView) findViewById(R.id.recycler_dates_practic);
@@ -65,21 +69,36 @@ public class AbsencesActivity extends AppCompatActivity {
         Date date = new Date();
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        //TODO leer de la BBDD. Se leen todas y luego según su type se añaden a una lista u otra
+
         absencesTeoria = new ArrayList<>();
         absencesPractica = new ArrayList<>();
         absencesSeminario = new ArrayList<>();
-        Absence a1 = new Absence(calendar, 2, false);
-        Absence a2 = new Absence(calendar, 3, true);
-        absencesPractica.add(a1);
-        absencesSeminario.add(a2);
-        //fin hardcodeado
+
+        Thread t = new Thread() {
+            @Override
+            public void run() {
+                AppDatabase db = AppDatabase.Companion.getAppDatabase(getApplicationContext());
+                Long id = Long.valueOf(db.subjectDao().getByName(subjectName).getId());
+                List<AbsenceEntity> absences = db.absenceDao().getBySubjectId(id);
+                for (AbsenceEntity absence : absences) {
+                    int type = absence.getSectionType();
+                    if (type == 1)
+                        absencesTeoria.add(new Absence(new Date(absence.getDate()), 1, absence.isAutomatic()));
+                    else if (type == 2)
+                        absencesPractica.add(new Absence(new Date(absence.getDate()), 2, absence.isAutomatic()));
+                     else
+                        absencesSeminario.add(new Absence(new Date(absence.getDate()), 3, absence.isAutomatic()));
+                }
+            }
+        };
+        t.start();
+
         getSupportActionBar().setTitle("Ausencias de " + subjectName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        adapterTeoria = new AbsencesAdapter(absencesTeoria, getApplicationContext(), AbsencesActivity.this);
-        adapterPractica = new AbsencesAdapter(absencesPractica, getApplicationContext(), AbsencesActivity.this);
-        adapterSeminario = new AbsencesAdapter(absencesSeminario, getApplicationContext(), AbsencesActivity.this);
+        adapterTeoria = new AbsencesAdapter(subjectName, absencesTeoria, getApplicationContext(), AbsencesActivity.this);
+        adapterPractica = new AbsencesAdapter(subjectName, absencesPractica, getApplicationContext(), AbsencesActivity.this);
+        adapterSeminario = new AbsencesAdapter(subjectName, absencesSeminario, getApplicationContext(), AbsencesActivity.this);
 
         listaTeoriaView.setAdapter(adapterTeoria);
         listaPracticaView.setAdapter(adapterPractica);
@@ -154,20 +173,25 @@ public class AbsencesActivity extends AppCompatActivity {
     }
 
     private void saveDate(int sectionSelected, Date newDate) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(newDate);
+        AbsencesRepository repository = new AbsencesRepository();
+        Absence absence;
         switch (sectionSelected) {
-            //TODO guardar en la base de datos
             case 1:
-                absencesTeoria.add(new Absence(calendar, 1, false));
+                absence = new Absence(newDate, 2, false);
+                repository.addAbsence(subjectName, absence, getApplicationContext());
+                absencesTeoria.add(absence);
                 adapterTeoria.notifyDataSetChanged();
                 break;
             case 2:
-                absencesPractica.add(new Absence(calendar, 1, false));
+                absence = new Absence(newDate, 2, false);
+                repository.addAbsence(subjectName, absence, getApplicationContext());
+                absencesPractica.add(absence);
                 adapterPractica.notifyDataSetChanged();
                 break;
             case 3:
-                absencesSeminario.add(new Absence(calendar, 1, false));
+                absence = new Absence(newDate, 3, false);
+                repository.addAbsence(subjectName, absence, getApplicationContext());
+                absencesSeminario.add(absence);
                 adapterSeminario.notifyDataSetChanged();
                 break;
             default:

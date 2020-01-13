@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity
-data class AbsenceEntity(val sectionId: Long, val date: Long, val isAutomatic: Boolean) {
+data class AbsenceEntity(val sectionId: Long, val sectionType: Int, val date: Long, val isAutomatic: Boolean) {
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null

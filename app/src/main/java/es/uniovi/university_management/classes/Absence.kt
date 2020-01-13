@@ -7,4 +7,4 @@ import java.util.*
  * type: 2 = Practice
  * type: 3 = Seminary
  */
-data class Absence(val date: Calendar, val type: Int, val isAutomatic: Boolean)
+data class Absence(val date: Date, val type: Int, val isAutomatic: Boolean)

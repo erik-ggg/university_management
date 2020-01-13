@@ -17,6 +17,7 @@ import java.util.List;
 
 import es.uniovi.university_management.R;
 import es.uniovi.university_management.classes.Absence;
+import es.uniovi.university_management.repositories.AbsencesRepository;
 import es.uniovi.university_management.util.DateParser;
 
 public class AbsencesAdapter extends RecyclerView.Adapter<AbsencesAdapter.MyViewHolder> {
@@ -24,12 +25,14 @@ public class AbsencesAdapter extends RecyclerView.Adapter<AbsencesAdapter.MyView
     private List<Absence> listaAusencias;
     private Context context;
     private Activity absencesActivity;
+    private String subjectName;
 
 
-    public AbsencesAdapter(List<Absence> listaAusencias, Context context, Activity timeTableActivity) {
+    public AbsencesAdapter(String subjectName, List<Absence> listaAusencias, Context context, Activity timeTableActivity) {
         this.listaAusencias = listaAusencias;
         this.context = context;
         this.absencesActivity = timeTableActivity;
+        this.subjectName = subjectName;
     }
 
 
@@ -45,15 +48,12 @@ public class AbsencesAdapter extends RecyclerView.Adapter<AbsencesAdapter.MyView
     @Override
     public void onBindViewHolder(@NonNull AbsencesAdapter.MyViewHolder holder, int position) {
         Absence absence = listaAusencias.get(position);
-        Date date = absence.getDate().getTime();
+        Date date = absence.getDate();
         DateParser parser = new DateParser();
         holder.fecha.setText(parser.dateToStringWithoutHour(date));
         if (absence.isAutomatic())
             holder.automatica.setText("Automática");
-        holder.eliminar.setOnClickListener(view -> {
-
-            confirmaBorrado(position);
-        });
+        holder.eliminar.setOnClickListener(view -> confirmaBorrado(position));
 
 
     }
@@ -66,10 +66,10 @@ public class AbsencesAdapter extends RecyclerView.Adapter<AbsencesAdapter.MyView
                 .setMessage("La fecha se eliminará definitivamente del horario, ¿está seguro?")
                 .setPositiveButton("OK",
                         (dialog, which) -> {
-
+                            AbsencesRepository repository = new AbsencesRepository();
+                            repository.delete(listaAusencias.get(pos), context);
                             listaAusencias.remove(pos);
                             AbsencesAdapter.this.notifyDataSetChanged();
-                            //TODO notificar cambios a la base de datos
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())
