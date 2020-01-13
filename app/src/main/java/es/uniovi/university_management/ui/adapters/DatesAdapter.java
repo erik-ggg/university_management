@@ -59,7 +59,6 @@ public class DatesAdapter extends RecyclerView.Adapter<DatesAdapter.MyViewHolder
 
     private void confirmaBorrado(int pos) {
         AlertDialog.Builder builder = new AlertDialog.Builder(timeTableActivity);
-
         builder.setTitle("Eliminar fecha")
                 .setMessage("La fecha se eliminará definitivamente del horario, ¿está seguro?")
                 .setPositiveButton("OK",

@@ -10,6 +10,8 @@
         android:id="@+id/notasLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:background="@color/colorAccent"
         android:text="@string/notas"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
@@ -25,6 +27,8 @@
         android:id="@+id/horarioLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
         android:background="@color/colorAccent"
         android:text="@string/proxima_clase"
         android:textColor="@color/common_google_signin_btn_text_dark_default" />
@@ -32,19 +36,20 @@
     <TextView
         android:id="@+id/textNextLesson"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="18sp" />
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginStart="5dp"
         android:layout_marginBottom="5dp">
 
         <TextView
             android:id="@+id/textNotaMedia"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:text="Nota actual del curso" />
+            android:layout_alignParentBottom="true" />
 
         <TextView
             android:id="@+id/textAusenciasRestantesPracticas"

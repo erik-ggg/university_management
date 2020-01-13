@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.Toolbar;
@@ -283,7 +284,20 @@ public class FragmentSubject extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 testDescription = input1.getText().toString();
                 testMark = input2.getText().toString();
-                saveTest(sectionSelected, testDescription, testMark);
+                Double markDouble = null;
+                try {
+                    markDouble = Double.parseDouble(testMark);
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                } finally {
+                    Toast toast1 =
+                            Toast.makeText(getActivity(),
+                                    "Error: el valor de la nota es incorrecto", Toast.LENGTH_LONG);
+
+                    toast1.show();
+                }
+
+                saveTest(sectionSelected, testDescription, markDouble);
 
             }
         });
@@ -297,8 +311,7 @@ public class FragmentSubject extends Fragment {
         builder.show();
     }
 
-    private void saveTest(int sectionSelected, String testDescription, String testMark) {
-        Double d = Double.parseDouble(testMark);
+    private void saveTest(int sectionSelected, String testDescription, Double d) {
 
 
         switch (sectionSelected) {

@@ -3,8 +3,9 @@ package es.uniovi.university_management.parser
 import android.content.Context
 import android.util.Log
 import es.uniovi.university_management.classes.TimeSubject
-import java.io.*
-import java.lang.Exception
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.InputStreamReader
 
 class CSVReader() {
 
@@ -21,8 +22,8 @@ class CSVReader() {
     private val SEV = "SEV"
     private val SDM = "SDM"
 
-    fun readCSV(context: Context): MutableList<TimeSubject> {
-        val inputStream: InputStream = context.assets.open("plan.csv")
+    fun readCSV(context: Context, inputStream: InputStream): MutableList<TimeSubject> {
+        //val inputStream: InputStream = context.assets.open("plan.csv")
         val fileReader = BufferedReader(InputStreamReader(inputStream))
         var subjectsCalendar = mutableListOf<TimeSubject>()
         var currentSubject = ""

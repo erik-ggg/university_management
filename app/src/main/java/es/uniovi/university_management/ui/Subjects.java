@@ -5,7 +5,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteConstraintException;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -17,32 +17,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Subject;
-import es.uniovi.university_management.classes.Teacher;
 import es.uniovi.university_management.classes.TimeSubject;
 import es.uniovi.university_management.classes.Year;
-import es.uniovi.university_management.database.AppDatabase;
-import es.uniovi.university_management.model.OfficeEntity;
-import es.uniovi.university_management.model.PracticeEntity;
-import es.uniovi.university_management.model.SectionTimeEntity;
-import es.uniovi.university_management.model.SeminaryEntity;
-import es.uniovi.university_management.model.SubjectEntity;
-import es.uniovi.university_management.model.TeacherEntity;
-import es.uniovi.university_management.model.TeacherSubjectEntity;
-import es.uniovi.university_management.model.TheoryEntity;
 import es.uniovi.university_management.parser.CSVReader;
 import es.uniovi.university_management.parser.XmlReader;
 import es.uniovi.university_management.repositories.SubjectRepository;
 import es.uniovi.university_management.ui.adapters.SubjectsAdapter;
+import es.uniovi.university_management.util.Messenger;
 
 public class Subjects extends AppCompatActivity {
 
@@ -50,8 +38,10 @@ public class Subjects extends AppCompatActivity {
     private ArrayList<Subject> subjectsToAdd;
     SubjectsAdapter mAdapter;
     private SearchView searchView;
-    //esto es para poder crear asignaturas
-    ArrayList<Teacher> teachers = new ArrayList<Teacher>();
+    private int VALOR_RETORNO = 1;
+    private Uri uri;
+    Messenger messenger = new Messenger();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,11 +66,6 @@ public class Subjects extends AppCompatActivity {
         listaAsignaturasView.setAdapter(mAdapter);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        //getSavedSubjects();
-    }
 
     private void getSavedSubjects() {
         SubjectRepository repository = new SubjectRepository();
@@ -147,10 +132,45 @@ public class Subjects extends AppCompatActivity {
     }
 
     private void loadSchedule() {
-        CSVReader reader = new CSVReader();
-        final List<TimeSubject> timeSubjects = reader.readCSV(getApplicationContext());
-        SubjectRepository repository = new SubjectRepository();
-        repository.addDates(timeSubjects,getApplicationContext());
+
+        if (subjectsAdded.isEmpty()) {
+            messenger.MostrarMensajeShort(getApplicationContext(), "Antes de cargar el horario debe añadir las asignaturas");
+        } else {
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            startActivityForResult(Intent.createChooser(intent, "Choose File"), 1);
+        }
+
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_CANCELED) {
+            //Cancelado por el usuario
+        }
+        if ((resultCode == RESULT_OK) && (requestCode == VALOR_RETORNO)) {
+            //Procesar el resultado
+            uri = data.getData(); //obtener el uri content
+            InputStream inputStream = null;
+            try {
+                inputStream = getContentResolver().openInputStream(uri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            CSVReader reader = new CSVReader();
+
+            final List<TimeSubject> timeSubjects = reader.readCSV(getApplicationContext(), inputStream);
+            if (timeSubjects.isEmpty()) {
+                messenger.MostrarMensajeShort(getApplicationContext(), "Error: el archivo no contiene ningún horario válido");
+
+            } else {
+                messenger.MostrarMensajeShort(getApplicationContext(), "Se han cargado horarios");
+            }
+            SubjectRepository repository = new SubjectRepository();
+            repository.addDates(timeSubjects, getApplicationContext());
+        }
     }
 
     @Override

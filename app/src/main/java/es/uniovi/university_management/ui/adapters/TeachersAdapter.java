@@ -105,6 +105,7 @@ public class TeachersAdapter extends RecyclerView.Adapter<TeachersAdapter.MyView
 
                             listaProfesores.remove(pos);
                             TeachersAdapter.this.notifyDataSetChanged();
+
                         })
                 .setNegativeButton("CANCELAR",
                         (dialog, which) -> dialog.cancel())

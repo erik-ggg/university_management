@@ -1,7 +1,6 @@
 package es.uniovi.university_management.ui;
 
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.uniovi.university_management.R;
-import es.uniovi.university_management.classes.Office;
 import es.uniovi.university_management.classes.Teacher;
-import es.uniovi.university_management.database.AppDatabase;
-import es.uniovi.university_management.model.OfficeEntity;
-import es.uniovi.university_management.model.TeacherEntity;
-import es.uniovi.university_management.model.TeacherSubjectEntity;
 import es.uniovi.university_management.repositories.TeachersRepository;
 import es.uniovi.university_management.ui.adapters.TeachersAdapter;
 
@@ -51,19 +45,22 @@ public class TeachersActivity extends AppCompatActivity {
 
         getSupportActionBar().setTitle("Profesores de " + subjectName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
     }
+
 
     private void loadTeachers(String subjectName, List<Teacher> teachers) {
         TeachersRepository repository = new TeachersRepository();
         repository.getTeachers(subjectName, teachers, getApplicationContext());
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_teachers, menu);
         return true;
-    }
+    }*/
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -73,8 +70,8 @@ public class TeachersActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.add_teacher)
-            return true;
+        // if (id == R.id.add_teacher)
+        //return true;
         if (item.getItemId() == android.R.id.home) // Press Back Icon
         {
             onBackPressed();
