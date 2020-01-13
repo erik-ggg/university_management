@@ -351,15 +351,14 @@ public class FragmentSubject extends Fragment {
                     markDouble = Double.parseDouble(testMark);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                } finally {
                     Toast toast1 =
                             Toast.makeText(getActivity(),
                                     "Error: el valor de la nota es incorrecto", Toast.LENGTH_LONG);
 
                     toast1.show();
                 }
-
-                saveTest(sectionSelected, testDescription, markDouble);
+                if (markDouble != null)
+                    saveTest(sectionSelected, testDescription, markDouble);
 
             }
         });
